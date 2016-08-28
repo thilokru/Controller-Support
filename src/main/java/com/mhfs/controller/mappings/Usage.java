@@ -2,20 +2,25 @@ package com.mhfs.controller.mappings;
 
 import com.mhfs.controller.Config;
 import com.mhfs.controller.actions.ActionEmulationHelper;
+import com.mhfs.controller.hooks.ControllerMovementInput;
 import com.mhfs.controller.mappings.StickMap.IStick;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MovementInput;
 
 public enum Usage implements IStick{
 	MOVEMENT {
 		public void apply(Minecraft mc, float value, EnumFacing.Axis axis) {
+			MovementInput input = mc.thePlayer.movementInput;
+			if(!(input instanceof ControllerMovementInput))return;
+			ControllerMovementInput cmi = (ControllerMovementInput) input;
 			switch (axis) {
 			case Y:
-				mc.thePlayer.moveForward += value; 
+				cmi.setForwardMotion(-value);
 				break;
 			case X:
-				mc.thePlayer.moveStrafing += value;
+				cmi.setStrafeMotion(-value);
 				break;
 			default:
 				break;

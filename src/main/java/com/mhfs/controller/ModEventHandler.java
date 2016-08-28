@@ -5,10 +5,13 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.event.ControllerInputEvent;
+import com.mhfs.controller.hooks.ControllerMovementInput;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -32,6 +35,13 @@ public class ModEventHandler {
 			Config.INSTANCE.setController(controller);
 			this.controller = controller;//TODO: On first detection, ask user if he wants to use a controller.
 		}
+	}
+	
+	@SubscribeEvent
+	public void handlePlayerMovementInput(LivingEvent.LivingUpdateEvent event) {
+		if(!(event.getEntityLiving() instanceof EntityPlayerSP))return;
+		if(((EntityPlayerSP) event.getEntityLiving()).movementInput instanceof ControllerMovementInput)return;
+		Minecraft.getMinecraft().thePlayer.movementInput = new ControllerMovementInput(Minecraft.getMinecraft().gameSettings);
 	}
 
 	@SubscribeEvent
