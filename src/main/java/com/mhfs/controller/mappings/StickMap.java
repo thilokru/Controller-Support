@@ -24,7 +24,9 @@ public class StickMap {
 				continue;
 			
 			EnumFacing.Axis axis = axisCoordMap.get(name);
-			float value = controller.getAxisValue(id) * Config.INSTANCE.getStickSensitivity() * 50;
+			float orig = controller.getAxisValue(id);
+			float value = (float) (Math.pow(orig * Config.INSTANCE.getStickSensitivity(), 2) * 50);
+			if(orig < 0.0F) value = -value;
 			
 			usage.apply(mc, value, axis);
 		}

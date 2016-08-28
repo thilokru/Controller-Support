@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 
+import com.mhfs.controller.actions.ActionLeftClick;
 import com.mhfs.controller.actions.ActionRegistry;
 import com.mhfs.controller.actions.TestAction;
 import com.mhfs.controller.mappings.ControllerMapping;
@@ -49,7 +50,10 @@ public class ControllerSupportMod {
 			LOG.error("Unable to load controllers", e);
 		}
 		handler.detectControllers();
+		
 		ActionRegistry.registerAction(new TestAction());
+		ActionRegistry.registerAction(new ActionLeftClick());
+		
 		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 		ControllerMapping mapping = ControllerMapping.loadFromFile(loc, manager);

@@ -26,7 +26,20 @@ public class ScreenCondition implements ICondition{
 
 	@Override
 	public boolean check(Minecraft mc, Controller controller) {
-		return screenClazz.isAssignableFrom(mc.currentScreen.getClass());
+		if(mc == null) return false;
+		
+		if(mc.ingameGUI == null) {
+			if(screenClazz.getCanonicalName().endsWith("GuiIngame")){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		try {
+			return screenClazz.isAssignableFrom(mc.currentScreen.getClass());
+		} catch (NullPointerException npe) {
+			return false;
+		}
 	}
 	
 	@Override

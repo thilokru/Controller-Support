@@ -16,7 +16,7 @@ public class AndCondition implements ICondition {
 	}
 
 	public AndCondition(String args) {
-		String[] subConditions = args.split(",");
+		String[] subConditions = StringSplitHelper.parantheticalLeveledStringSplit(args);
 		this.conditions = new ICondition[subConditions.length];
 		for(int i = 0; i < subConditions.length; i++) {
 			String subCon = subConditions[i].trim();
