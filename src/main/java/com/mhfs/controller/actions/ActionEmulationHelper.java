@@ -23,9 +23,23 @@ public class ActionEmulationHelper {
 		robot.mouseMove((int)x, (int)y);
 	}
 
-	public static void leftClick() {
+	public static void startLeftClick() {
 		int mask = InputEvent.getMaskForButton(1);
 		robot.mousePress(mask);
+	}
+	
+	public static void stopLeftClick() {
+		int mask = InputEvent.getMaskForButton(1);
+		robot.mouseRelease(mask);
+	}
+
+	public static void startRightClick() {
+		int mask = InputEvent.getMaskForButton(2);
+		robot.mousePress(mask);
+	}
+	
+	public static void stopRightClick() {
+		int mask = InputEvent.getMaskForButton(2);
 		robot.mouseRelease(mask);
 	}
 }

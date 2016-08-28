@@ -4,7 +4,12 @@ public class ActionLeftClick implements IAction {
 
 	@Override
 	public void run() {
-		ActionEmulationHelper.leftClick();
+		ActionEmulationHelper.startLeftClick();
+	}
+	
+	@Override
+	public void notRun() {
+		ActionEmulationHelper.stopLeftClick();
 	}
 
 	@Override

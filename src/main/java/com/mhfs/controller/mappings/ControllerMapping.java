@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.lwjgl.input.Controller;
 
@@ -62,9 +63,11 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	private volatile ResourceLocation location;
 	
 	private void applyButtons(Minecraft mc, Controller controller) {
-		for(ICondition condition : buttonMap.keySet()) {
-			if(condition.check(mc, controller)) {
-				buttonMap.get(condition).run();
+		for(Entry<ICondition, IAction> entry : buttonMap.entrySet()) {
+			if(entry.getKey().check(mc, controller)) {
+				entry.getValue().run();
+			} else {
+				entry.getValue().notRun();
 			}
 		}
 	}
