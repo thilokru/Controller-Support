@@ -54,6 +54,7 @@ public class ModEventHandler {
 	
 	@SubscribeEvent
 	public void handleControllerInput(ControllerInputEvent event) {
+		controller.poll();
 		event.getMapping().apply(Minecraft.getMinecraft(), controller);
 	}
 	

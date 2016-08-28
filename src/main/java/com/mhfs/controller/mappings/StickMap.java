@@ -3,9 +3,9 @@ package com.mhfs.controller.mappings;
 import java.util.Map;
 
 import org.lwjgl.input.Controller;
-import org.lwjgl.input.Mouse;
-
 import com.mhfs.controller.Config;
+import com.mhfs.controller.actions.ActionEmulationHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumFacing;
 
@@ -17,14 +17,14 @@ public class StickMap {
 	public void apply(Minecraft mc, Controller controller) {
 		int stickCount = controller.getAxisCount();
 		for(int id = 0; id < stickCount; id++) {
-			String name = controller.getAxisName(id);
+			String name = ConditionSerializationHelper.getNames().getAxisName(id);
 			Usage usage = axisUsageMap.get(name);
 			
 			if(usage == null)
 				continue;
 			
 			EnumFacing.Axis axis = axisCoordMap.get(name);
-			float value = controller.getAxisValue(id) * Config.INSTANCE.getStickSensitivity();
+			float value = controller.getAxisValue(id) * Config.INSTANCE.getStickSensitivity() * 50;
 			
 			usage.apply(mc, value, axis);
 		}
@@ -68,6 +68,7 @@ public class StickMap {
 			}			
 		},
 		MOUSE {
+			
 			public void apply(Minecraft mc, float value, EnumFacing.Axis axis) {
 				boolean invertLookAxis = Config.INSTANCE.hasInvertedLookAxis();
 				if(invertLookAxis) {
@@ -75,15 +76,15 @@ public class StickMap {
 				}
 				switch (axis) {
 				case Y:
-					Mouse.setCursorPosition(Mouse.getX(), (int) (Mouse.getY() + value));
+					ActionEmulationHelper.moveMouse(0, value);
 					break;
 				case X:
-					Mouse.setCursorPosition((int) (Mouse.getX() + value), Mouse.getY());
+					ActionEmulationHelper.moveMouse(value, 0);
 					break;
 				default:
 					break;
 				}
 			}
-		}
+		};
 	}
 }
