@@ -47,15 +47,15 @@ public class ModEventHandler {
 	public void handleTick() {
 		Config cfg = Config.INSTANCE;
 		if(!(cfg.hasController() && controller != null))return;
+		controller.poll();
 		if(Controllers.next()) {
+			handleControllerInput();
 			MinecraftForge.EVENT_BUS.post(new ControllerInputEvent(cfg.getMapping(), controller));
 		}
 	}
 	
-	@SubscribeEvent
-	public void handleControllerInput(ControllerInputEvent event) {
-		controller.poll();
-		event.getMapping().apply(Minecraft.getMinecraft(), controller);
+	public void handleControllerInput() {
+		Config.INSTANCE.getMapping().apply(Minecraft.getMinecraft(), controller);
 	}
 	
 	@SubscribeEvent

@@ -22,6 +22,9 @@ public class StringSplitHelper {
 				}
 			}
 		}
+		if(firstValid < arg.length()) {
+			segments.add(arg.substring(firstValid, arg.length()));
+		}
 		return segments.toArray(new String[0]);
 	}
 }
