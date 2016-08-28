@@ -30,10 +30,10 @@ public enum Usage implements IStick{
 			}
 			switch (axis) {
 			case Y:
-				mc.thePlayer.cameraYaw += value; 
+				mc.getRenderViewEntity().rotationPitch += value;
 				break;
 			case X:
-				mc.thePlayer.cameraPitch += value;
+				mc.getRenderViewEntity().rotationYaw += value;
 				break;
 			default:
 				break;
