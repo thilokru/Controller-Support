@@ -15,7 +15,6 @@ public class ActionKeyBind implements IAction{
 	public void run() {
 		KeyBinding.setKeyBindState(binding.getKeyCode(), true);
 		KeyBinding.onTick(binding.getKeyCode());
-		System.out.println("Button action! " + binding.getKeyDescription());
 	}
 
 	@Override
