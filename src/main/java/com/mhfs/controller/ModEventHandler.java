@@ -9,7 +9,6 @@ import com.mhfs.controller.hooks.ControllerMovementInput;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,7 +23,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class ModEventHandler {
 	
 	private Controller controller;
-	private boolean alreadyRun = false;
 	
 	public void detectControllers() {
 		int count = Controllers.getControllerCount();
@@ -51,18 +49,11 @@ public class ModEventHandler {
 		handleTick();
 	}
 	
-	@SubscribeEvent
-	public void handleMouseTicks(MouseEvent event) {
-		if(!alreadyRun) {
-			handleTick();
-			alreadyRun = true;
-		}
-	}
 	
 	@SubscribeEvent
 	public void handleClientTickEnd(ClientTickEvent event) {
-		if(event.phase == Phase.END){
-			alreadyRun = false;
+		if(event.phase == Phase.START){
+			handleTick();
 		}
 	}
 	
