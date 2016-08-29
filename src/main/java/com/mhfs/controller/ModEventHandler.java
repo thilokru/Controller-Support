@@ -70,12 +70,10 @@ public class ModEventHandler {
 		Config cfg = Config.INSTANCE;
 		if(!(cfg.hasController() && controller != null))return;
 		controller.poll();
-		if(Controllers.next()) {
-			if(mouse) {
-				cfg.getMapping().applyMouse(Minecraft.getMinecraft(), controller);
-			}
-			cfg.getMapping().applyButtons(Minecraft.getMinecraft(), controller);
+		if(mouse) {
+			cfg.getMapping().applyMouse(Minecraft.getMinecraft(), controller);
 		}
+		cfg.getMapping().applyButtons(Minecraft.getMinecraft(), controller);
 	}
 	
 	@SubscribeEvent
