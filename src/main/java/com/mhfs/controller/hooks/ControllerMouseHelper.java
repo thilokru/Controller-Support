@@ -25,7 +25,6 @@ public class ControllerMouseHelper extends MouseHelper{
 		float oy = add.getRight();
 		float dy = (float) (Math.pow(add.getRight() * Config.INSTANCE.getStickSensitivity(), 2) * 150);
 		if(oy < 0.0F) dy = -dy;
-		System.out.println(dx + " " + dy);
 		this.deltaX += dx;
 		this.deltaY += dy;
 	}

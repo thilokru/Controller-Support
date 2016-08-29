@@ -34,12 +34,12 @@ public class ActionEmulationHelper {
 	}
 
 	public static void startRightClick() {
-		int mask = InputEvent.getMaskForButton(2);
+		int mask = InputEvent.getMaskForButton(3);
 		robot.mousePress(mask);
 	}
 	
 	public static void stopRightClick() {
-		int mask = InputEvent.getMaskForButton(2);
+		int mask = InputEvent.getMaskForButton(3);
 		robot.mouseRelease(mask);
 	}
 }
