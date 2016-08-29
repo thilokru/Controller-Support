@@ -8,6 +8,7 @@ import org.lwjgl.input.Controllers;
 import com.mhfs.controller.actions.ActionLeftClick;
 import com.mhfs.controller.actions.ActionRegistry;
 import com.mhfs.controller.actions.ActionRightClick;
+import com.mhfs.controller.helper.KeyBindHelper;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.mappings.ControllerMapping;
 
@@ -55,6 +56,7 @@ public class ControllerSupportMod {
 		
 		ActionRegistry.registerAction(new ActionLeftClick());
 		ActionRegistry.registerAction(new ActionRightClick());
+		KeyBindHelper.registerActions();
 		
 		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
