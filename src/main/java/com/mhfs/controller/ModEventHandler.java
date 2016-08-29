@@ -5,6 +5,7 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.event.ControllerInputEvent;
+import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
 
 import net.minecraft.client.Minecraft;
@@ -42,6 +43,7 @@ public class ModEventHandler {
 		if(!(event.getEntityLiving() instanceof EntityPlayerSP))return;
 		if(((EntityPlayerSP) event.getEntityLiving()).movementInput instanceof ControllerMovementInput)return;
 		Minecraft.getMinecraft().thePlayer.movementInput = new ControllerMovementInput(Minecraft.getMinecraft().gameSettings);
+		Minecraft.getMinecraft().mouseHelper = new ControllerMouseHelper();
 	}
 
 	@SubscribeEvent

@@ -31,7 +31,7 @@
 			xName: "RX",
 			yName: "RY",
 			xInverted: false,
-			yInverted: false
+			yInverted: true
 		}
 	}
 }
