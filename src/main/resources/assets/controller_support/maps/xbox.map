@@ -24,8 +24,8 @@
 		"L": {
 			xName: "LX",
 			yName: "LY",
-			xInverted: false,
-			yInverted: false		
+			xInverted: true,
+			yInverted: true		
 		},
 		"R": {
 			xName: "RX",
