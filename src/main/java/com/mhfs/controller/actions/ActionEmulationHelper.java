@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.MouseInfo;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 public class ActionEmulationHelper {
 
@@ -41,5 +42,13 @@ public class ActionEmulationHelper {
 	public static void stopRightClick() {
 		int mask = InputEvent.getMaskForButton(3);
 		robot.mouseRelease(mask);
+	}
+	
+	public static void startEscape() {
+		robot.keyPress(KeyEvent.VK_ESCAPE);
+	}
+	
+	public static void stopEscape() {
+		robot.keyRelease(KeyEvent.VK_ESCAPE);
 	}
 }
