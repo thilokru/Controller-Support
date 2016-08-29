@@ -87,7 +87,9 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		StickConfig cfg = getStick(mc, controller, Usage.MOUSE);
 		if(cfg == null) return;
 		Pair<Float, Float> input = cfg.getData(controller);
-		ActionEmulationHelper.moveMouse(input.getLeft(), input.getRight());
+		float dx = (float) (Math.pow(input.getLeft(), 3) * 25);
+		float dy = (float) (Math.pow(input.getRight(), 3) * 25);
+		ActionEmulationHelper.moveMouse(-dx, -dy);
 	}
 	
 	public ResourceLocation getLocation(){

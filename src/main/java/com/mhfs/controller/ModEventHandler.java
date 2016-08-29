@@ -48,13 +48,13 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void handleGuiScreenEvent(GuiScreenEvent.DrawScreenEvent event) {
-		handleTick(true);
+		handleTick();
 	}
 	
 	@SubscribeEvent
 	public void handleMouseTicks(MouseEvent event) {
 		if(!alreadyRun) {
-			handleTick(false);
+			handleTick();
 			alreadyRun = true;
 		}
 	}
@@ -66,13 +66,11 @@ public class ModEventHandler {
 		}
 	}
 	
-	public void handleTick(boolean mouse) {
+	public void handleTick() {
 		Config cfg = Config.INSTANCE;
 		if(!(cfg.hasController() && controller != null))return;
 		controller.poll();
-		if(mouse) {
-			cfg.getMapping().applyMouse(Minecraft.getMinecraft(), controller);
-		}
+		cfg.getMapping().applyMouse(Minecraft.getMinecraft(), controller);
 		cfg.getMapping().applyButtons(Minecraft.getMinecraft(), controller);
 	}
 	
