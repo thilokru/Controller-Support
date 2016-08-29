@@ -22,7 +22,7 @@ public class ActionKeyBind implements IAction{
 
 	@Override
 	public String getName() {
-		return "KEY_BIND(" + name.toUpperCase() + ")";
+		return "KB(" + name + ")";
 	}
 
 }

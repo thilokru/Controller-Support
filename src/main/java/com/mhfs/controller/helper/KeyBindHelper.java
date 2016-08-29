@@ -1,5 +1,6 @@
 package com.mhfs.controller.helper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.mhfs.controller.actions.ActionKeyBind;
@@ -10,7 +11,7 @@ import net.minecraft.client.settings.KeyBinding;
 
 public class KeyBindHelper {
 	
-	private static Map<String, KeyBinding> bindings;
+	private static Map<String, KeyBinding> bindings = new HashMap<String, KeyBinding>();
 	
 	private static void init() {
 		for(KeyBinding binding : Minecraft.getMinecraft().gameSettings.keyBindings) {
