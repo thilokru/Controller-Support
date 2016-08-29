@@ -8,6 +8,7 @@ import org.lwjgl.input.Controllers;
 import com.mhfs.controller.actions.ActionLeftClick;
 import com.mhfs.controller.actions.ActionRegistry;
 import com.mhfs.controller.actions.ActionRightClick;
+import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.mappings.ControllerMapping;
 
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = ControllerSupportMod.MODID, name = ControllerSupportMod.NAME, version = "1.0Alpha", clientSideOnly = true, canBeDeactivated = true)
@@ -59,6 +61,10 @@ public class ControllerSupportMod {
 		ControllerMapping mapping = ControllerMapping.loadFromFile(loc, manager);
 		Config.INSTANCE.setMapping(mapping);	
 		Config.INSTANCE.save();
+	}
+	
+	public void postInit(FMLPostInitializationEvent event) {
+		Minecraft.getMinecraft().mouseHelper = new ControllerMouseHelper();
 	}
 	
 	/*@EventHandler

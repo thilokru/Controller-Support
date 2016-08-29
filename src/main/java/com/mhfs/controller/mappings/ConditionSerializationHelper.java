@@ -71,7 +71,7 @@ public class ConditionSerializationHelper {
 			@SuppressWarnings("serial")
 			Type type = new TypeToken<ControllNameMaps>(){}.getType();
 			names = nameLoader.fromJson(isr, type);
-			names.buildInverted();
+			names.build();
 		} catch (Exception e) {
 			ControllerSupportMod.LOG.error("Error loading button map!", e);
 		}

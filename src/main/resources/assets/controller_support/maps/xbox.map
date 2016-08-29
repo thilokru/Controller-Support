@@ -19,5 +19,19 @@
 		"Z": 4,
 		"DX": -1,
 		"DY": -2
+	},
+	sticks: {
+		"L": {
+			xName: "LX",
+			yName: "LY",
+			xInverted: false,
+			yInverted: false		
+		},
+		"R": {
+			xName: "RX",
+			yName: "RY",
+			xInverted: false,
+			yInverted: false
+		}
 	}
 }

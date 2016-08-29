@@ -8,10 +8,6 @@ public class StickConfig {
 	private int xID, yID;
 	private boolean xInverted, yInverted;
 	
-	public StickConfig(int xID, int yID) {
-		this(xID, yID, false, false);
-	}
-	
 	public StickConfig(int xID, int yID, boolean xInverted, boolean yInverted) {
 		this.xID = xID;
 		this.yID = yID;
@@ -28,5 +24,21 @@ public class StickConfig {
 		if(yInverted) y = -y;
 		
 		return Pair.of(x, y);
+	}
+	
+	public static class Uncompiled {
+		private String xName, yName;
+		private boolean xInverted, yInverted;
+		
+		public Uncompiled(String xName, String yName, boolean xInverted, boolean yInverted) {
+			this.xName = xName;
+			this.yName = yName;
+			this.xInverted = xInverted;
+			this.yInverted = yInverted;
+		}
+		
+		public StickConfig compile(ControllNameMaps names) {
+			return new StickConfig(names.getAxisID(xName), names.getAxisID(yName), xInverted, yInverted);
+		}
 	}
 }

@@ -4,20 +4,18 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.mhfs.controller.Config;
 import com.mhfs.controller.mappings.StickConfig;
+import com.mhfs.controller.mappings.Usage;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.MouseHelper;
 
 public class ControllerMouseHelper extends MouseHelper{
 	
-	private StickConfig cfg;
-	
-	public ControllerMouseHelper(StickConfig config) {
-		this.cfg = config;
-	}
 
 	@Override
 	public void mouseXYChange() {
 		super.mouseXYChange();
+		StickConfig cfg = Config.INSTANCE.getMapping().getStick(Minecraft.getMinecraft(), Config.INSTANCE.getController(), Usage.VIEW);
 		Pair<Float, Float> add = cfg.getData(Config.INSTANCE.getController());
 		float ox = add.getLeft();
 		float dx = (float) (Math.pow(add.getLeft() * Config.INSTANCE.getStickSensitivity(), 2) * 50);

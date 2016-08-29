@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Controller;
 
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import com.google.gson.stream.JsonWriter;
 
 import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
+import com.mhfs.controller.actions.ActionEmulationHelper;
 import com.mhfs.controller.actions.ActionRegistry;
 import com.mhfs.controller.actions.IAction;
 import com.mhfs.controller.mappings.conditions.ICondition;
@@ -56,10 +58,19 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 			return res;
 		}
 		
+	}).registerTypeHierarchyAdapter(StickConfig.class, new TypeAdapter<StickConfig>(){
+		@Override
+		public void write(JsonWriter out, StickConfig value) throws IOException {
+			out.value(ConditionSerializationHelper.getNames().getStickName(value));
+		}
+		@Override
+		public StickConfig read(JsonReader in) throws IOException {
+			return ConditionSerializationHelper.getNames().getStick(in.nextString());
+		}
 	}).create();
 	
 	private Map<ICondition, IAction> buttonMap;
-	private Map<ICondition, StickMap> stickMap;
+	private Map<ICondition, Map<Usage, StickConfig>> stickMap;
 	private volatile ResourceLocation location;
 	
 	private void applyButtons(Minecraft mc, Controller controller) {
@@ -73,12 +84,10 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	}
 	
 	private void applySticks(Minecraft mc, Controller controller) {
-		for(ICondition condition : stickMap.keySet()) {
-			if(condition.check(mc, controller)) {
-				stickMap.get(condition).apply(mc, controller);
-				return;
-			}
-		}
+		StickConfig cfg = getStick(mc, controller, Usage.MOUSE);
+		if(cfg == null) return;
+		Pair<Float, Float> input = cfg.getData(controller);
+		ActionEmulationHelper.moveMouse(input.getLeft(), input.getRight());
 	}
 
 	public void apply(Minecraft minecraft, Controller controller) {
@@ -107,6 +116,15 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 			return mapping;
 		} catch (IOException e) {
 			ControllerSupportMod.LOG.error("Exception while loading mapping!", e);
+		}
+		return null;
+	}
+
+	public StickConfig getStick(Minecraft mc, Controller controller, Usage usage) {
+		for(Entry<ICondition, Map<Usage, StickConfig>> entry : stickMap.entrySet()) {
+			if(entry.getKey().check(mc, controller)) {
+				return entry.getValue().get(usage);
+			}
 		}
 		return null;
 	}
