@@ -63,6 +63,7 @@ public class ModEventHandler {
 		controller.poll();
 		cfg.getMapping().applyMouse(Minecraft.getMinecraft(), controller);
 		cfg.getMapping().applyButtons(Minecraft.getMinecraft(), controller);
+		Controllers.clearEvents();
 	}
 	
 	@SubscribeEvent

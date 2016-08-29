@@ -9,7 +9,6 @@ import com.mhfs.controller.actions.ActionKeyBind;
 import com.mhfs.controller.actions.ActionLeftClick;
 import com.mhfs.controller.actions.ActionRegistry;
 import com.mhfs.controller.actions.ActionRightClick;
-import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.mappings.ControllerMapping;
 
 import net.minecraft.client.Minecraft;
@@ -66,7 +65,7 @@ public class ControllerSupportMod {
 	}
 	
 	public void postInit(FMLPostInitializationEvent event) {
-		Minecraft.getMinecraft().mouseHelper = new ControllerMouseHelper();
+		Controllers.clearEvents();
 	}
 	
 	/*@EventHandler
