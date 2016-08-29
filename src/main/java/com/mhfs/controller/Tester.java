@@ -3,6 +3,8 @@ package com.mhfs.controller;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
+import net.minecraft.client.Minecraft;
+
 public class Tester {
 
 	public static void test(final Controller controller){
@@ -24,5 +26,10 @@ public class Tester {
 			
 			ControllerSupportMod.LOG.info("DPAD-TEST-END!");
 		}
+	}
+	
+	public static boolean debug() {
+		System.out.println(Minecraft.getMinecraft().gameSettings.keyBindInventory.isPressed());
+		return false;
 	}
 }

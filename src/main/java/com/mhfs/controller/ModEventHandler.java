@@ -3,19 +3,18 @@ package com.mhfs.controller;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
-
-import com.mhfs.controller.event.ControllerInputEvent;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 /**
  * Handles the InputEvent (each Tick) to pull data from the controller and input to the game.
@@ -25,6 +24,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 public class ModEventHandler {
 	
 	private Controller controller;
+	private boolean alreadyRun = false;
 	
 	public void detectControllers() {
 		int count = Controllers.getControllerCount();
@@ -48,26 +48,34 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void handleGuiScreenEvent(GuiScreenEvent.DrawScreenEvent event) {
-		handleTick();
+		handleTick(true);
 	}
 	
 	@SubscribeEvent
-	public void handleMouseTicks(InputEvent.MouseInputEvent event) {
-		handleTick();
+	public void handleMouseTicks(MouseEvent event) {
+		if(!alreadyRun) {
+			handleTick(false);
+			alreadyRun = true;
+		}
 	}
 	
-	public void handleTick() {
+	@SubscribeEvent
+	public void handleClientTickEnd(ClientTickEvent event) {
+		if(event.phase == Phase.END){
+			alreadyRun = false;
+		}
+	}
+	
+	public void handleTick(boolean mouse) {
 		Config cfg = Config.INSTANCE;
 		if(!(cfg.hasController() && controller != null))return;
 		controller.poll();
 		if(Controllers.next()) {
-			handleControllerInput();
-			MinecraftForge.EVENT_BUS.post(new ControllerInputEvent(cfg.getMapping(), controller));
+			if(mouse) {
+				cfg.getMapping().applyMouse(Minecraft.getMinecraft(), controller);
+			}
+			cfg.getMapping().applyButtons(Minecraft.getMinecraft(), controller);
 		}
-	}
-	
-	public void handleControllerInput() {
-		Config.INSTANCE.getMapping().apply(Minecraft.getMinecraft(), controller);
 	}
 	
 	@SubscribeEvent

@@ -73,7 +73,7 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	private Map<ICondition, Map<Usage, StickConfig>> stickMap;
 	private volatile ResourceLocation location;
 	
-	private void applyButtons(Minecraft mc, Controller controller) {
+	public void applyButtons(Minecraft mc, Controller controller) {
 		for(Entry<ICondition, IAction> entry : buttonMap.entrySet()) {
 			if(entry.getKey().check(mc, controller)) {
 				entry.getValue().run();
@@ -83,16 +83,11 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		}
 	}
 	
-	private void applySticks(Minecraft mc, Controller controller) {
+	public void applyMouse(Minecraft mc, Controller controller) {
 		StickConfig cfg = getStick(mc, controller, Usage.MOUSE);
 		if(cfg == null) return;
 		Pair<Float, Float> input = cfg.getData(controller);
 		ActionEmulationHelper.moveMouse(input.getLeft(), input.getRight());
-	}
-
-	public void apply(Minecraft minecraft, Controller controller) {
-		applyButtons(minecraft, controller);
-		applySticks(minecraft, controller);
 	}
 	
 	public ResourceLocation getLocation(){
