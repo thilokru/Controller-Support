@@ -14,7 +14,17 @@ public class ActionKeyBind implements IAction{
 	@Override
 	public void run() {
 		KeyBinding.setKeyBindState(binding.getKeyCode(), true);
-		KeyBinding.onTick(binding.getKeyCode());
+		if(shouldTick()){
+			KeyBinding.onTick(binding.getKeyCode());
+		}
+	}
+
+	private boolean shouldTick() {
+		String desc = binding.getKeyDescription();
+		if(desc.equals("key.use")){
+			return false;
+		}
+		return true;
 	}
 
 	@Override
