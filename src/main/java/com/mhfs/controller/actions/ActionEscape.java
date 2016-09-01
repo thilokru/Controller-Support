@@ -1,14 +1,14 @@
 package com.mhfs.controller.actions;
 
-public class ActionEscape implements IAction{
+public class ActionEscape extends ActionToEvent{
 
 	@Override
-	public void run() {
+	public void buttonDown() {
 		ActionEmulationHelper.startEscape();
 	}
 
 	@Override
-	public void notRun() {
+	public void buttonUp() {
 		ActionEmulationHelper.stopEscape();
 	}
 

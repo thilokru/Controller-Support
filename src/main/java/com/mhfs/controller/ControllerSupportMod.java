@@ -6,6 +6,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.actions.ActionEscape;
+import com.mhfs.controller.actions.ActionItemSwitch;
 import com.mhfs.controller.actions.ActionKeyBind;
 import com.mhfs.controller.actions.ActionLeftClick;
 import com.mhfs.controller.actions.ActionRegistry;
@@ -58,6 +59,7 @@ public class ControllerSupportMod {
 		ActionRegistry.registerAction(new ActionRightClick());
 		ActionRegistry.registerAction(new ActionEscape());
 		ActionKeyBind.registerActions();
+		ActionItemSwitch.register();
 		
 		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();

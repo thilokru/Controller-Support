@@ -1,23 +1,15 @@
 package com.mhfs.controller.actions;
 
-public class ActionRightClick implements IAction {
+public class ActionRightClick extends ActionToEvent {
 	
-	private boolean allowToggleOn = true, allowToggleOff = false;
-
 	@Override
-	public void run() {
-		if(allowToggleOn)
-			ActionEmulationHelper.startRightClick();
-		this.allowToggleOn = false;
-		this.allowToggleOff = true;
+	public void buttonDown() {
+		ActionEmulationHelper.startRightClick();
 	}
 	
 	@Override
-	public void notRun() {
-		if(allowToggleOff)
-			ActionEmulationHelper.stopRightClick();
-		this.allowToggleOn = true;
-		this.allowToggleOff = false;
+	public void buttonUp() {
+		ActionEmulationHelper.stopRightClick();
 	}
 
 	@Override
