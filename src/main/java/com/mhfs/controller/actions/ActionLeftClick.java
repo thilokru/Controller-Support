@@ -1,15 +1,23 @@
 package com.mhfs.controller.actions;
 
 public class ActionLeftClick implements IAction {
+	
+	private boolean allowToggleOn = true, allowToggleOff = false;
 
 	@Override
 	public void run() {
-		ActionEmulationHelper.startLeftClick();
+		if(allowToggleOn)
+			ActionEmulationHelper.startLeftClick();
+		this.allowToggleOn = false;
+		this.allowToggleOff = true;
 	}
 	
 	@Override
 	public void notRun() {
-		ActionEmulationHelper.stopLeftClick();
+		if(allowToggleOff)
+			ActionEmulationHelper.stopLeftClick();
+		this.allowToggleOn = true;
+		this.allowToggleOff = false;
 	}
 
 	@Override

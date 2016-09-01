@@ -13,7 +13,8 @@ public class ActionKeyBind implements IAction{
 
 	@Override
 	public void run() {
-		KeyBinding.setKeyBindState(binding.getKeyCode(), true);
+		if(!binding.isKeyDown())
+			KeyBinding.setKeyBindState(binding.getKeyCode(), true);
 		if(shouldTick()){
 			KeyBinding.onTick(binding.getKeyCode());
 		}
@@ -29,7 +30,8 @@ public class ActionKeyBind implements IAction{
 
 	@Override
 	public void notRun() {
-		KeyBinding.setKeyBindState(binding.getKeyCode(), false);
+		if(binding.isKeyDown())
+			KeyBinding.setKeyBindState(binding.getKeyCode(), false);
 	}
 
 	@Override
