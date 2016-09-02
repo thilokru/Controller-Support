@@ -12,10 +12,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInputFromOptions;
 
 public class ControllerMovementInput extends MovementInputFromOptions {
-	
-	private boolean jumpOv, sneakOv;
-	
-	
+
 	public ControllerMovementInput(GameSettings gameSettingsIn) {
 		super(gameSettingsIn);
 	}
@@ -29,13 +26,10 @@ public class ControllerMovementInput extends MovementInputFromOptions {
 		if(cfg == null)return;
 		Pair<Float, Float> movement = cfg.getData(controller);
 		
-		this.jump = this.jump || jumpOv;
-		
 		if(this.sneak) {
 			this.moveForward /= 0.3;
 			this.moveStrafe /= 0.3;
 		}
-		this.sneak = this.sneak || sneakOv;
 		
 		this.moveForward = clamp(this.moveForward + movement.getRight(), -1.0F, 1.0F);
 		this.moveStrafe = clamp(this.moveStrafe + movement.getLeft(), -1.0F, 1.0F);
@@ -55,21 +49,4 @@ public class ControllerMovementInput extends MovementInputFromOptions {
 			return val;
 		}
 	}
-
-	public void jump(){
-		this.jumpOv = true;
-	}
-	
-	public void notJump(){
-		this.jumpOv = false;
-	}
-	
-	public void sneak(){
-		this.sneakOv = true;
-	}
-	
-	public void notSneak(){
-		this.sneakOv = false;
-	}
-
 }
