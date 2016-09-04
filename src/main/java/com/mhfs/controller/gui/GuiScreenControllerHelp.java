@@ -23,12 +23,13 @@ public class GuiScreenControllerHelp extends GuiScreen {
 	
 	public GuiScreenControllerHelp(GuiScreen previous) {
 		this.previous = previous;
-		this.startX = 0;
-		this.lineWidth = 0;
 	}
 	
 	@Override
 	public void initGui() {
+		this.startX = 0;
+		this.lineWidth = 0;
+		this.columns = 1;
 		ControllerMapping mapping = Config.INSTANCE.getMapping();
 		functions = mapping.getIngameButtonFunctions();
 		this.buttonList.add(new GuiButton(0, (this.width / 2) - 100, this.height - 20, I18n.format("gui.back")));
