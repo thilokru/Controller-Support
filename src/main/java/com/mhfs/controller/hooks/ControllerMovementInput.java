@@ -7,7 +7,6 @@ import com.mhfs.controller.Config;
 import com.mhfs.controller.mappings.StickConfig;
 import com.mhfs.controller.mappings.Usage;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInputFromOptions;
 
@@ -22,7 +21,7 @@ public class ControllerMovementInput extends MovementInputFromOptions {
 		super.updatePlayerMoveState();
 		
 		Controller controller = Config.INSTANCE.getController();
-		StickConfig cfg = Config.INSTANCE.getMapping().getStick(Minecraft.getMinecraft(), controller, Usage.MOVEMENT);
+		StickConfig cfg = Config.INSTANCE.getMapping().getStick(Usage.MOVEMENT);
 		if(cfg == null)return;
 		Pair<Float, Float> movement = cfg.getData(controller);
 		

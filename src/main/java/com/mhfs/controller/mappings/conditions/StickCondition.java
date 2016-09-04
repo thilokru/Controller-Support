@@ -5,8 +5,6 @@ import org.lwjgl.input.Controller;
 import com.mhfs.controller.mappings.ConditionSerializationHelper;
 import com.mhfs.controller.mappings.SpecialCaseAxes;
 
-import net.minecraft.client.Minecraft;
-
 public class StickCondition implements ICondition {
 	
 	private int axis;
@@ -27,7 +25,8 @@ public class StickCondition implements ICondition {
 	}
 
 	@Override
-	public boolean check(Minecraft mc, Controller controller) {
+	public boolean check(GameContext context) {
+		Controller controller = context.getController();
 		float value;
 		
 		if(axis >= 0) {

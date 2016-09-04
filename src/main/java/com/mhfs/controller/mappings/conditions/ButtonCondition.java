@@ -1,10 +1,6 @@
 package com.mhfs.controller.mappings.conditions;
 
-import org.lwjgl.input.Controller;
-
 import com.mhfs.controller.mappings.ConditionSerializationHelper;
-
-import net.minecraft.client.Minecraft;
 
 public class ButtonCondition implements ICondition{
 	
@@ -19,8 +15,8 @@ public class ButtonCondition implements ICondition{
 	}
 
 	@Override
-	public boolean check(Minecraft mc, Controller controller) {
-		return controller.isButtonPressed(buttonID);
+	public boolean check(GameContext context) {
+		return context.getController().isButtonPressed(buttonID);
 	}
 	
 	@Override

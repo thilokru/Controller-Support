@@ -1,10 +1,6 @@
 package com.mhfs.controller.mappings.conditions;
 
-import org.lwjgl.input.Controller;
-
 import com.mhfs.controller.mappings.ConditionSerializationHelper;
-
-import net.minecraft.client.Minecraft;
 
 public class OrCondition implements ICondition{
 
@@ -24,10 +20,10 @@ public class OrCondition implements ICondition{
 	}
 
 	@Override
-	public boolean check(Minecraft mc, Controller controller) {
+	public boolean check(GameContext context) {
 		boolean check = false;
 		for(ICondition condition : conditions) {
-			check = check || condition.check(mc, controller);
+			check = check || condition.check(context);
 		}
 		return check;
 	}

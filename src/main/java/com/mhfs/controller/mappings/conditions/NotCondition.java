@@ -1,10 +1,6 @@
 package com.mhfs.controller.mappings.conditions;
 
-import org.lwjgl.input.Controller;
-
 import com.mhfs.controller.mappings.ConditionSerializationHelper;
-
-import net.minecraft.client.Minecraft;
 
 public class NotCondition implements ICondition{
 
@@ -19,8 +15,8 @@ public class NotCondition implements ICondition{
 	}
 
 	@Override
-	public boolean check(Minecraft mc, Controller controller) {
-		return !condition.check(mc, controller);
+	public boolean check(GameContext context) {
+		return !condition.check(context);
 	}
 	
 	@Override

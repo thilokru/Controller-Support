@@ -3,11 +3,14 @@ package com.mhfs.controller;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
+
+import com.mhfs.controller.gui.ButtonArranger;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -22,7 +25,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
  */
 public class ModEventHandler {
 	
-	private Controller controller;
+	private GuiScreen prevScreen = null;
 	
 	public void detectControllers() {
 		int count = Controllers.getControllerCount();
@@ -31,8 +34,7 @@ public class ModEventHandler {
 		for(int id = 0; id < count; id++) {
 			Controller controller = Controllers.getController(id);
 			log.info(String.format("Controller: %s", controller.getName()));
-			Config.INSTANCE.setController(controller);
-			this.controller = controller;//TODO: On first detection, ask user if he wants to use a controller.
+			Config.INSTANCE.setController(controller); //TODO: ask user if he'd likes to use the controller.
 		}
 	}
 	
@@ -47,6 +49,7 @@ public class ModEventHandler {
 	@SubscribeEvent
 	public void handleGuiScreenEvent(GuiScreenEvent.DrawScreenEvent event) {
 		handleTick();
+		screenHandler(event);
 	}
 	
 	
@@ -59,11 +62,18 @@ public class ModEventHandler {
 	
 	public void handleTick() {
 		Config cfg = Config.INSTANCE;
-		if(!(cfg.hasController() && controller != null))return;
+		if(!(cfg.hasController()))return;
+		Controller controller = cfg.getController();
 		controller.poll();
-		cfg.getMapping().applyMouse(Minecraft.getMinecraft(), controller);
-		cfg.getMapping().applyButtons(Minecraft.getMinecraft(), controller);
+		cfg.getMapping().apply();
 		Controllers.clearEvents();
+	}
+	
+	private void screenHandler(GuiScreenEvent.DrawScreenEvent event) {
+		if(prevScreen != event.getGui()) {
+			prevScreen = event.getGui();
+			ButtonArranger.arrangeButtonsVertical(event.getGui());
+		}
 	}
 	
 	@SubscribeEvent

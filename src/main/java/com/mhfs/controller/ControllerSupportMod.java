@@ -12,6 +12,7 @@ import com.mhfs.controller.actions.ActionLeftClick;
 import com.mhfs.controller.actions.ActionRegistry;
 import com.mhfs.controller.actions.ActionRightClick;
 import com.mhfs.controller.mappings.ControllerMapping;
+import com.mhfs.controller.mappings.conditions.GameContext;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
@@ -54,6 +55,9 @@ public class ControllerSupportMod {
 			LOG.error("Unable to load controllers", e);
 		}
 		handler.detectControllers();
+		if(!Config.INSTANCE.hasController()) {
+			return;
+		}
 		
 		ActionRegistry.registerAction(new ActionLeftClick());
 		ActionRegistry.registerAction(new ActionRightClick());
@@ -64,11 +68,15 @@ public class ControllerSupportMod {
 		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 		ControllerMapping mapping = ControllerMapping.loadFromFile(loc, manager);
+		mapping.init(new GameContext(Config.INSTANCE.getController()));
 		Config.INSTANCE.setMapping(mapping);	
 		Config.INSTANCE.save();
 	}
 	
 	public void postInit(FMLPostInitializationEvent event) {
+		if(!Config.INSTANCE.hasController()) {
+			return;
+		}
 		Controllers.clearEvents();
 	}
 	

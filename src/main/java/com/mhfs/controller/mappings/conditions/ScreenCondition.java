@@ -1,10 +1,7 @@
 package com.mhfs.controller.mappings.conditions;
 
-import org.lwjgl.input.Controller;
-
 import com.google.common.base.Throwables;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ScreenCondition implements ICondition{
@@ -25,21 +22,8 @@ public class ScreenCondition implements ICondition{
 	}
 
 	@Override
-	public boolean check(Minecraft mc, Controller controller) {
-		if(mc == null) return false;
-		
-		if(mc.ingameGUI == null) {
-			if(screenClazz.getCanonicalName().endsWith("GuiIngame")){
-				return true;
-			} else {
-				return false;
-			}
-		}
-		try {
-			return screenClazz.isAssignableFrom(mc.currentScreen.getClass());
-		} catch (NullPointerException npe) {
-			return false;
-		}
+	public boolean check(GameContext context) {
+		return context.isScreenInstanceOf(screenClazz);
 	}
 	
 	@Override

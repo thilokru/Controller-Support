@@ -6,7 +6,6 @@ import com.mhfs.controller.Config;
 import com.mhfs.controller.mappings.StickConfig;
 import com.mhfs.controller.mappings.Usage;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.MouseHelper;
 
 public class ControllerMouseHelper extends MouseHelper{
@@ -16,7 +15,8 @@ public class ControllerMouseHelper extends MouseHelper{
 	public void mouseXYChange() {
 		super.mouseXYChange();
 		Config.INSTANCE.getController().poll();
-		StickConfig cfg = Config.INSTANCE.getMapping().getStick(Minecraft.getMinecraft(), Config.INSTANCE.getController(), Usage.VIEW);
+		StickConfig cfg = Config.INSTANCE.getMapping().getStick(Usage.VIEW);
+		if(cfg == null)return;
 		Pair<Float, Float> add = cfg.getData(Config.INSTANCE.getController());
 		float ox = add.getLeft();
 		float dx = (float) (Math.pow(add.getLeft() * Config.INSTANCE.getStickSensitivity(), 2) * 150);

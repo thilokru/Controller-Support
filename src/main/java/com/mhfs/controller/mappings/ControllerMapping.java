@@ -7,11 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.input.Controller;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.Expose;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -20,16 +19,17 @@ import com.mhfs.controller.ControllerSupportMod;
 import com.mhfs.controller.actions.ActionEmulationHelper;
 import com.mhfs.controller.actions.ActionRegistry;
 import com.mhfs.controller.actions.IAction;
+import com.mhfs.controller.mappings.conditions.GameContext;
 import com.mhfs.controller.mappings.conditions.ICondition;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 
 public class ControllerMapping implements IResourceManagerReloadListener{
 	
-	private final static Gson mappingLoader = new GsonBuilder().registerTypeHierarchyAdapter(ICondition.class, new TypeAdapter<ICondition>(){
+	private final static Gson mappingLoader = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation()
+	 .registerTypeHierarchyAdapter(ICondition.class, new TypeAdapter<ICondition>(){
 
 		@Override
 		public void write(JsonWriter out, ICondition value) throws IOException {
@@ -69,13 +69,41 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		}
 	}).create();
 	
-	private Map<ICondition, IAction> buttonMap;
+	@Expose
+	private Map<ICondition, Map<ICondition, IAction>> buttonMap;
+	@Expose
 	private Map<ICondition, Map<Usage, StickConfig>> stickMap;
-	private volatile ResourceLocation location;
 	
-	public void applyButtons(Minecraft mc, Controller controller) {
-		for(Entry<ICondition, IAction> entry : buttonMap.entrySet()) {
-			if(entry.getKey().check(mc, controller)) {
+	private volatile ResourceLocation location;
+	private volatile GameContext context;
+	private volatile Map<Usage, StickConfig> currentStickMap;
+	private volatile Map<ICondition, IAction> currentButtonMap;
+	
+	public void init(GameContext context) {
+		this.context = context;
+	}
+	
+	public void apply() {
+		if(context.update()) {
+			currentStickMap = select(stickMap, context);
+			currentButtonMap = select(buttonMap, context);
+		}
+		applyMouse();
+		applyButtons();
+	}
+	
+	private static <T extends ICondition, V> V select(Map<T, V> input, GameContext context) {
+		for(Entry<T, V> entry : input.entrySet()) {
+			if(entry.getKey().check(context)) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
+	
+	private void applyButtons() {
+		for(Entry<ICondition, IAction> entry : currentButtonMap.entrySet()) {
+			if(entry.getKey().check(this.context)) {
 				entry.getValue().run();
 			} else {
 				entry.getValue().notRun();
@@ -83,13 +111,17 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		}
 	}
 	
-	public void applyMouse(Minecraft mc, Controller controller) {
-		StickConfig cfg = getStick(mc, controller, Usage.MOUSE);
+	private void applyMouse() {
+		StickConfig cfg = getStick(Usage.MOUSE);
 		if(cfg == null) return;
-		Pair<Float, Float> input = cfg.getData(controller);
+		Pair<Float, Float> input = cfg.getData(context.getController());
 		float dx = (float) (Math.pow(input.getLeft(), 3) * 25);
 		float dy = (float) (Math.pow(input.getRight(), 3) * 25);
 		ActionEmulationHelper.moveMouse(-dx, -dy);
+	}
+	
+	public StickConfig getStick(Usage usage) {
+		return currentStickMap.get(usage);
 	}
 	
 	public ResourceLocation getLocation(){
@@ -113,15 +145,6 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 			return mapping;
 		} catch (IOException e) {
 			ControllerSupportMod.LOG.error("Exception while loading mapping!", e);
-		}
-		return null;
-	}
-
-	public StickConfig getStick(Minecraft mc, Controller controller, Usage usage) {
-		for(Entry<ICondition, Map<Usage, StickConfig>> entry : stickMap.entrySet()) {
-			if(entry.getKey().check(mc, controller)) {
-				return entry.getValue().get(usage);
-			}
 		}
 		return null;
 	}
