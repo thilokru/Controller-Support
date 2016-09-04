@@ -71,6 +71,11 @@ public class LabelButtonInfo extends GuiLabel {
 			Field fieldLabelList = GuiScreen.class.getDeclaredField("labelList");
 			fieldLabelList.setAccessible(true);
 			List<GuiLabel> labelList = (List<GuiLabel>) fieldLabelList.get(screen);
+			for(GuiLabel label : labelList) {
+				if(label instanceof LabelButtonInfo) {
+					return;
+				}
+			}
 			labelList.add(new LabelButtonInfo(Minecraft.getMinecraft().fontRendererObj, -100, 2, 2, 0, 0));
 		} catch (Throwable t) {
 			Throwables.propagate(t);
