@@ -33,5 +33,6 @@
 			xInverted: false,
 			yInverted: true
 		}
-	}
+	},
+	texture: "controller_support:textures/xbox-buttons.cfg"
 }

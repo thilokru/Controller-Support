@@ -1,12 +1,7 @@
 package com.mhfs.controller.mappings;
 
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import org.lwjgl.input.Controller;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
 import com.mhfs.controller.mappings.conditions.AndCondition;
@@ -23,9 +18,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ConditionSerializationHelper {
 	
-	private final static Gson nameLoader = new GsonBuilder().enableComplexMapKeySerialization().create();
-	
-	private static ControllNameMaps names;
+	private static ControllInfo names;
 
 	public static String toString(ICondition value) {
 		return value.toSaveString();
@@ -66,22 +59,14 @@ public class ConditionSerializationHelper {
 		} else {
 			setMap(name);
 		}
-		try {
-			InputStreamReader isr = new InputStreamReader(manager.getResource(Config.INSTANCE.getButtonNameMapLocation()).getInputStream());
-			@SuppressWarnings("serial")
-			Type type = new TypeToken<ControllNameMaps>(){}.getType();
-			names = nameLoader.fromJson(isr, type);
-			names.build();
-		} catch (Exception e) {
-			ControllerSupportMod.LOG.error("Error loading button map!", e);
-		}
+		names = ControllInfo.load(Config.INSTANCE.getButtonNameMapLocation(), manager);
 	}
 	
 	private static void setMap(String mapName) {
 		Config.INSTANCE.setButtonNameMapLocation(new ResourceLocation(ControllerSupportMod.MODID, String.format("maps/%s.map", mapName)));
 	}
 	
-	public static ControllNameMaps getNames() {
+	public static ControllInfo getNames() {
 		return names;
 	}
 	

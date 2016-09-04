@@ -149,4 +149,9 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		return null;
 	}
 
+	public Map<String, String> getButtonFunctions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

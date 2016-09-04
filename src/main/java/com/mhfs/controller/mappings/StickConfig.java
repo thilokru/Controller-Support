@@ -37,7 +37,7 @@ public class StickConfig {
 			this.yInverted = yInverted;
 		}
 		
-		public StickConfig compile(ControllNameMaps names) {
+		public StickConfig compile(ControllInfo names) {
 			return new StickConfig(names.getAxisID(xName), names.getAxisID(yName), xInverted, yInverted);
 		}
 	}
