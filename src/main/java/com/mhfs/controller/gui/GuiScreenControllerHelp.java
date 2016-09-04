@@ -15,14 +15,33 @@ import net.minecraft.client.resources.I18n;
 public class GuiScreenControllerHelp extends GuiScreen {
 	
 	private GuiScreen previous;
+	private int startX;
+	private int lineWidth;
+	private int columns = 1;
+	
+	private List<Pair<String, String>> functions;
 	
 	public GuiScreenControllerHelp(GuiScreen previous) {
 		this.previous = previous;
+		this.startX = 0;
+		this.lineWidth = 0;
 	}
 	
 	@Override
 	public void initGui() {
-		this.buttonList.add(new GuiButton(0, 0, 0, I18n.format("gui.back")));
+		ControllerMapping mapping = Config.INSTANCE.getMapping();
+		functions = mapping.getIngameButtonFunctions();
+		this.buttonList.add(new GuiButton(0, (this.width / 2) - 100, this.height - 20, I18n.format("gui.back")));
+		int currentY = 50;
+		for(Pair<String, String> entry : functions) {
+			lineWidth = Math.max(lineWidth, LabelButtonInfo.scaledTextureSize + this.fontRendererObj.getStringWidth(entry.getValue()) + LabelButtonInfo.boundary * 2);
+			currentY += LabelButtonInfo.scaledTextureSize + 3 * LabelButtonInfo.boundary;
+			if(currentY > this.height - 50) {
+				currentY = 50;
+				columns++;
+			}
+		}
+		this.startX = (this.width - columns * lineWidth) / 2;
 	}
 	
 	@Override
@@ -30,19 +49,15 @@ public class GuiScreenControllerHelp extends GuiScreen {
 		super.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		LabelButtonInfo helper = new LabelButtonInfo(this.fontRendererObj, 0, 0, 0, 0, 0);
-		ControllerMapping mapping = Config.INSTANCE.getMapping();
-		List<Pair<String, String>> functions = mapping.getIngameButtonFunctions();
-		int height = functions.size() * (LabelButtonInfo.scaledTextureSize + LabelButtonInfo.boundary * 2);
-		int width = 0;
+		int currentY = 50;
+		int currentX = startX;
 		for(Pair<String, String> entry : functions) {
-			width = Math.max(width, LabelButtonInfo.scaledTextureSize + this.fontRendererObj.getStringWidth(entry.getKey()) + LabelButtonInfo.boundary * 2);
-		}
-		
-		int startX = (this.width - width) / 2;
-		int startY = (this.height - height) / 2;
-		for(Pair<String, String> entry : functions) {
-			helper.drawSingleItem(entry.getLeft(), entry.getRight(), startX, startY);
-			startY += LabelButtonInfo.scaledTextureSize + 3 * LabelButtonInfo.boundary;
+			helper.drawSingleItem(entry.getLeft(), entry.getRight(), currentX, currentY);
+			currentY += LabelButtonInfo.scaledTextureSize + 3 * LabelButtonInfo.boundary;
+			if(currentY > this.height - 50) {
+				currentY = 50;
+				currentX += lineWidth;
+			}
 		}
 	}
 	
