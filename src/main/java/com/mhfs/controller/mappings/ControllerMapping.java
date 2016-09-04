@@ -61,11 +61,11 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	}).registerTypeHierarchyAdapter(StickConfig.class, new TypeAdapter<StickConfig>(){
 		@Override
 		public void write(JsonWriter out, StickConfig value) throws IOException {
-			out.value(ConditionSerializationHelper.getNames().getStickName(value));
+			out.value(ControllInfo.get().getStickName(value));
 		}
 		@Override
 		public StickConfig read(JsonReader in) throws IOException {
-			return ConditionSerializationHelper.getNames().getStick(in.nextString());
+			return ControllInfo.get().getStick(in.nextString());
 		}
 	}).create();
 	

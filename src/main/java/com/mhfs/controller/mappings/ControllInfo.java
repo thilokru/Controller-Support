@@ -22,6 +22,8 @@ public class ControllInfo {
 	
 	private final static Gson nameLoader = new GsonBuilder().enableComplexMapKeySerialization().create();
 	
+	private static ControllInfo INSTANCE;
+	
 	private Map<String, Integer> buttons;
 	private Map<String, Integer> axes;
 	private Map<String, StickConfig.Uncompiled> sticks;
@@ -60,6 +62,14 @@ public class ControllInfo {
 		ControllInfo names = nameLoader.fromJson(isr, type);
 		names.build();
 		return names;
+	}
+	
+	public static ControllInfo get() {
+		if(INSTANCE != null){
+			return INSTANCE;
+		} else {
+			throw new RuntimeException("ControllInfo hasn't been loaded yet but is already querried!");
+		}
 	}
 	
 	public TextureHelper getTextureHelper() {

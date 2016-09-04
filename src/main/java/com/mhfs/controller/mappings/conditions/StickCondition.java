@@ -2,7 +2,7 @@ package com.mhfs.controller.mappings.conditions;
 
 import org.lwjgl.input.Controller;
 
-import com.mhfs.controller.mappings.ConditionSerializationHelper;
+import com.mhfs.controller.mappings.ControllInfo;
 import com.mhfs.controller.mappings.SpecialCaseAxes;
 
 public class StickCondition implements ICondition {
@@ -19,7 +19,7 @@ public class StickCondition implements ICondition {
 
 	public StickCondition(String args) {
 		String[] sub = args.split(",");
-		this.axis = ConditionSerializationHelper.getNames().getAxisID(sub[0].trim());
+		this.axis = ControllInfo.get().getAxisID(sub[0].trim());
 		this.threshold = Float.parseFloat(sub[1].trim());
 		this.smallerThan = Boolean.parseBoolean(sub[2].trim());
 	}
@@ -43,7 +43,7 @@ public class StickCondition implements ICondition {
 	
 	@Override
 	public String toSaveString() {
-		return String.format("STICK(%s,%f,%s)", ConditionSerializationHelper.getNames().getAxisName(axis), threshold, Boolean.toString(smallerThan));
+		return String.format("STICK(%s,%f,%s)", ControllInfo.get().getAxisName(axis), threshold, Boolean.toString(smallerThan));
 	}
 
 }

@@ -17,8 +17,6 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ConditionSerializationHelper {
-	
-	private static ControllInfo names;
 
 	public static String toString(ICondition value) {
 		return value.toSaveString();
@@ -59,15 +57,11 @@ public class ConditionSerializationHelper {
 		} else {
 			setMap(name);
 		}
-		names = ControllInfo.load(Config.INSTANCE.getButtonNameMapLocation(), manager);
+		ControllInfo.load(Config.INSTANCE.getButtonNameMapLocation(), manager);
 	}
 	
 	private static void setMap(String mapName) {
 		Config.INSTANCE.setButtonNameMapLocation(new ResourceLocation(ControllerSupportMod.MODID, String.format("maps/%s.map", mapName)));
-	}
-	
-	public static ControllInfo getNames() {
-		return names;
 	}
 	
 }

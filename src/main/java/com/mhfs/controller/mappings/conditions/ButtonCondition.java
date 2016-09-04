@@ -1,6 +1,6 @@
 package com.mhfs.controller.mappings.conditions;
 
-import com.mhfs.controller.mappings.ConditionSerializationHelper;
+import com.mhfs.controller.mappings.ControllInfo;
 
 public class ButtonCondition implements ICondition{
 	
@@ -11,7 +11,7 @@ public class ButtonCondition implements ICondition{
 	}
 
 	public ButtonCondition(String args) {
-		this.buttonID = ConditionSerializationHelper.getNames().getButtonID(args.trim());
+		this.buttonID = ControllInfo.get().getButtonID(args.trim());
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class ButtonCondition implements ICondition{
 	
 	@Override
 	public String toSaveString() {
-		return String.format("BUTTON(%s)", ConditionSerializationHelper.getNames().getButtonName(buttonID));
+		return String.format("BUTTON(%s)", ControllInfo.get().getButtonName(buttonID));
 	}
 
 }
