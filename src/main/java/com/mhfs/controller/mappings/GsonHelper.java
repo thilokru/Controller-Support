@@ -44,7 +44,7 @@ public class GsonHelper {
 		
 		@Override
 		public void write(JsonWriter out, IAction value) throws IOException {
-			out.value(value.getName());
+			out.value(value.getActionName());
 		}
 
 		@Override

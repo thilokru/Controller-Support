@@ -21,7 +21,11 @@ public class ButtonCondition implements ICondition{
 	
 	@Override
 	public String toSaveString() {
-		return String.format("BUTTON(%s)", ControllInfo.get().getButtonName(buttonID));
+		return String.format("BUTTON(%s)", getButtonName());
+	}
+
+	public String getButtonName() {
+		return ControllInfo.get().getButtonName(buttonID);
 	}
 
 }

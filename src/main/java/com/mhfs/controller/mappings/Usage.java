@@ -1,7 +1,19 @@
 package com.mhfs.controller.mappings;
 
+import net.minecraft.client.resources.I18n;
+
 public enum Usage{
-	MOVEMENT,
-	VIEW,
-	MOUSE;
+	MOVEMENT("usage.movement"),
+	VIEW("usage.view"),
+	MOUSE("usage.mouse");
+	
+	private String translateKey;
+	
+	private Usage(String translateKey) {
+		this.translateKey = translateKey;
+	}
+
+	public String getDescription() {
+		return I18n.format(translateKey);
+	}
 }

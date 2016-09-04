@@ -1,6 +1,7 @@
 package com.mhfs.controller.actions;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 
 public class ActionItemSwitch extends ActionToEvent{
 	
@@ -20,12 +21,17 @@ public class ActionItemSwitch extends ActionToEvent{
 	public void buttonUp() {}
 
 	@Override
-	public String getName() {
+	public String getActionName() {
 		return down ? "ITEM_DOWN" : "ITEM_UP";
 	}
 	
 	public static void register() {
 		ActionRegistry.registerAction(new ActionItemSwitch(true));
 		ActionRegistry.registerAction(new ActionItemSwitch(false));
+	}
+
+	@Override
+	public String getActionDescription() {
+		return I18n.format(down ? "action.prevItem" : "action.nextItem");
 	}
 }

@@ -35,8 +35,13 @@ public class ActionKeyBind implements IAction{
 	}
 
 	@Override
-	public String getName() {
+	public String getActionName() {
 		return "KB(" + binding.getKeyDescription() + ")";
+	}
+	
+	@Override
+	public String getActionDescription() {
+		return binding.getDisplayName();
 	}
 
 	public static void registerActions() {
@@ -44,4 +49,5 @@ public class ActionKeyBind implements IAction{
 			ActionRegistry.registerAction(new ActionKeyBind(binding));
 		}
 	}
+
 }

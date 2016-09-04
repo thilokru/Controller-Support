@@ -60,7 +60,10 @@ public class TextureHelper implements IResourceManagerReloadListener {
 	}
 	
 	public SubTexture getTextureInfo(String name) {
-		return subTextures.get(name);
+		if(subTextures.containsKey(name)) {
+			return subTextures.get(name);
+		}
+		throw new RuntimeException("Unknown key '" + name + "' was querried!");
 	}
 	
 	public void drawTextureAt(String textureName, int x, int y) {

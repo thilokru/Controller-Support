@@ -41,4 +41,8 @@ public class StickConfig {
 			return new StickConfig(names.getAxisID(xName), names.getAxisID(yName), xInverted, yInverted);
 		}
 	}
+
+	public String getStickName() {
+		return ControllInfo.get().getStickName(this);
+	}
 }

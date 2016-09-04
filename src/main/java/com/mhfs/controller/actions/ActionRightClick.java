@@ -1,5 +1,7 @@
 package com.mhfs.controller.actions;
 
+import net.minecraft.client.resources.I18n;
+
 public class ActionRightClick extends ActionToEvent {
 	
 	@Override
@@ -13,8 +15,13 @@ public class ActionRightClick extends ActionToEvent {
 	}
 
 	@Override
-	public String getName() {
+	public String getActionName() {
 		return "CLICK_RIGHT";
+	}
+
+	@Override
+	public String getActionDescription() {
+		return I18n.format("action.rightClick");
 	}
 
 }

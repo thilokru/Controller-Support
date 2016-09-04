@@ -1,9 +1,11 @@
 package com.mhfs.controller.actions;
 
+import net.minecraft.client.resources.I18n;
+
 public class ActionLeftClick extends ActionToEvent {
 
 	@Override
-	public String getName() {
+	public String getActionName() {
 		return "CLICK_LEFT";
 	}
 
@@ -15,6 +17,11 @@ public class ActionLeftClick extends ActionToEvent {
 	@Override
 	public void buttonUp() {
 		ActionEmulationHelper.stopLeftClick();
+	}
+
+	@Override
+	public String getActionDescription() {
+		return I18n.format("action.leftClick");
 	}
 
 }

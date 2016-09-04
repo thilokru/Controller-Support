@@ -16,8 +16,10 @@ import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
 import com.mhfs.controller.actions.ActionEmulationHelper;
 import com.mhfs.controller.actions.IAction;
+import com.mhfs.controller.mappings.conditions.ButtonCondition;
 import com.mhfs.controller.mappings.conditions.GameContext;
 import com.mhfs.controller.mappings.conditions.ICondition;
+import com.mhfs.controller.mappings.conditions.StickCondition;
 
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -107,9 +109,21 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Pair<String, String>> getButtonFunctions() {
-		return Lists.newArrayList(Pair.<String, String>of("A", "Test"));
+		List<Pair<String, String>> ret = Lists.<Pair<String, String>>newArrayList();
+		for(Entry<ICondition, IAction> entry : currentButtonMap.entrySet()) {
+			String con = "";
+			if(entry.getKey() instanceof ButtonCondition) {
+				con = ((ButtonCondition)entry.getKey()).getButtonName();
+			} else if (entry.getKey() instanceof StickCondition) {
+				con = ((StickCondition)entry.getKey()).getStickName();
+			}
+			ret.add(Pair.of(con, entry.getValue().getActionDescription()));
+		}
+		for(Entry<Usage, StickConfig> entry : currentStickMap.entrySet()) {
+			ret.add(Pair.of(entry.getValue().getStickName(), entry.getKey().getDescription()));
+		}
+		return ret;
 	}
 
 }

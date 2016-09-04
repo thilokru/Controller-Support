@@ -38,12 +38,12 @@ public class LabelButtonInfo extends GuiLabel {
 		
 		int width = 0;
 		for(Pair<String, String> entry : buttonFunctions) {
-			width += scaledTextureSize + fr.getStringWidth(entry.getValue());
+			width += scaledTextureSize + fr.getStringWidth(entry.getValue()) + boundary;
 		}
 		int height = Math.max(fr.FONT_HEIGHT, scaledTextureSize);
 		
 		GlStateManager.enableBlend();
-		drawRect(x - boundary, y - boundary, x + width + 3 * boundary, y + height + boundary, 0xAA000000);
+		drawRect(x - boundary, y - boundary, x + width + 2 * boundary, y + height + boundary, 0xAA000000);
 		
 		int textYOffset = (scaledTextureSize - fr.FONT_HEIGHT) / 2;
 		int xCursor = this.x;
@@ -51,7 +51,8 @@ public class LabelButtonInfo extends GuiLabel {
 			GlStateManager.enableBlend();
 			xCursor += drawButton(xCursor, y, entry.getKey());
 			GlStateManager.disableBlend();
-			xCursor += this.fr.drawString(entry.getValue(), xCursor, this.y + textYOffset, 0xFFFFFF);
+			xCursor = this.fr.drawString(entry.getValue(), xCursor, this.y + textYOffset, 0xFFFFFF);
+			xCursor += boundary;
 		}
 	}
 

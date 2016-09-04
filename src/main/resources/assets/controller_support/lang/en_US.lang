@@ -1,0 +1,8 @@
+action.leftClick=left click
+action.rightClick=right click
+action.escape=escape
+action.prevItem=previous item
+action.nextItem=nextItem
+usage.move=move
+usage.mouse=mouse
+usage.view=view

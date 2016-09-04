@@ -43,7 +43,11 @@ public class StickCondition implements ICondition {
 	
 	@Override
 	public String toSaveString() {
-		return String.format("STICK(%s,%f,%s)", ControllInfo.get().getAxisName(axis), threshold, Boolean.toString(smallerThan));
+		return String.format("STICK(%s,%f,%s)", getStickName(), threshold, Boolean.toString(smallerThan));
+	}
+
+	public String getStickName() {
+		return ControllInfo.get().getAxisName(axis);
 	}
 
 }
