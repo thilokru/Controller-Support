@@ -12,9 +12,7 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import com.mhfs.controller.mappings.GsonHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,16 +24,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class TextureHelper implements IResourceManagerReloadListener {
 	
-	private final static Gson gson = new GsonBuilder().registerTypeHierarchyAdapter(ResourceLocation.class, new TypeAdapter<ResourceLocation>(){
-		@Override
-		public void write(JsonWriter out, ResourceLocation value) throws IOException {
-			out.value(value.toString());
-		}
-		@Override
-		public ResourceLocation read(JsonReader in) throws IOException {
-			return new ResourceLocation(in.nextString());
-		}
-	}).create();
+	private final static Gson gson = new GsonBuilder()
+			.registerTypeHierarchyAdapter(ResourceLocation.class, new GsonHelper.ResourceLocationTypeAdapter())
+			.create();
 	private final static Map<ResourceLocation, TextureHelper> cache = new HashMap<ResourceLocation, TextureHelper>();
 	private static Logger log = LogManager.getLogger("TextureHelper");
 	
@@ -95,6 +86,27 @@ public class TextureHelper implements IResourceManagerReloadListener {
 		GuiScreen.drawModalRectWithCustomSizedTexture(x, y, u, v, drawWidth, drawHeight, textureSizeX, textureSizeY);
 	}
 	
+	public void drawScaledTextureAt(String textureName, int x, int y, float scale) {
+		drawScaledTextureAt(textureName, x, y, scale, scale);
+	}
+	
+	public void drawScaledTextureAt(String textureName, int x, int y, float scaleX, float scaleY) {
+		drawScaledTextureAt(Minecraft.getMinecraft(), textureName, x, y, scaleX, scaleY);
+	}
+	
+	public void drawScaledTextureAt(Minecraft mc, String textureName, int x, int y, float scaleX, float scaleY) {
+		SubTexture sub = subTextures.get(textureName);
+		if(sub == null) return;
+		mc.getTextureManager().bindTexture(textureFile);
+		GlStateManager.enableBlend();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		int scaledWidth = (int) (sub.getWidth() * scaleX);
+		int scaledHeight = (int) (sub.getHeight() * scaleY);
+		
+		GuiScreen.drawScaledCustomSizeModalRect(x, y, sub.getX(), sub.getY(), sub.getWidth(), sub.getHeight(), scaledWidth, scaledHeight, textureSizeX, textureSizeY);
+	}
+	
 	public static TextureHelper get(ResourceLocation location) {
 		return get(Minecraft.getMinecraft().getResourceManager(), location);
 	}
@@ -104,8 +116,8 @@ public class TextureHelper implements IResourceManagerReloadListener {
 		if(helper == null) {
 			try {
 				helper = loadFromJSON(manager, location);
-			} catch (IOException e) {
-				log.error("Manual texture error occured!", e);
+			} catch (Throwable t) {
+				log.error("Texture error occured! " + location.toString(), t);
 			}
 			cache.put(location, helper);
 		}

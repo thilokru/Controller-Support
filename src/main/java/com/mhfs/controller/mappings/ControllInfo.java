@@ -20,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ControllInfo {
 	
-	private final static Gson nameLoader = new GsonBuilder().enableComplexMapKeySerialization().create();
+	private final static Gson nameLoader = GsonHelper.getGson(new GsonBuilder());
 	
 	private static ControllInfo INSTANCE;
 	
@@ -59,14 +59,15 @@ public class ControllInfo {
 		}
 		@SuppressWarnings("serial")
 		Type type = new TypeToken<ControllInfo>(){}.getType();
-		ControllInfo names = null;
+		ControllInfo data = null;
 		try {
-			names = nameLoader.fromJson(isr, type);
+			data = nameLoader.fromJson(isr, type);
 		} catch (Exception e) {
 			throw new RuntimeException("Error loading controller info (aka button names):", e);
 		}
-		names.build();
-		return names;
+		data.build();
+		INSTANCE = data;
+		return data;
 	}
 	
 	public static ControllInfo get() {

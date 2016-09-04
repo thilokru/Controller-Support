@@ -5,6 +5,7 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.gui.ButtonArranger;
+import com.mhfs.controller.gui.LabelButtonInfo;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
 
@@ -72,7 +73,8 @@ public class ModEventHandler {
 	private void screenHandler(GuiScreenEvent.DrawScreenEvent event) {
 		if(prevScreen != event.getGui()) {
 			prevScreen = event.getGui();
-			ButtonArranger.arrangeButtonsVertical(event.getGui());
+			LabelButtonInfo.inject(event.getGui());
+			//ButtonArranger.arrangeButtonsVertical(event.getGui());
 		}
 	}
 	
