@@ -59,7 +59,12 @@ public class ControllInfo {
 		}
 		@SuppressWarnings("serial")
 		Type type = new TypeToken<ControllInfo>(){}.getType();
-		ControllInfo names = nameLoader.fromJson(isr, type);
+		ControllInfo names = null;
+		try {
+			names = nameLoader.fromJson(isr, type);
+		} catch (Exception e) {
+			throw new RuntimeException("Error loading controller info (aka button names):", e);
+		}
 		names.build();
 		return names;
 	}
