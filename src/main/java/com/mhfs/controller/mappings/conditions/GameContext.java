@@ -39,4 +39,12 @@ public class GameContext {
 	public Controller getController() {
 		return controller;
 	}
+	
+	public static GameContext getIngameContext(Controller controller) {
+		GameContext gc = new GameContext(controller);
+		gc.currentScreen = null;
+		gc.ingame = true;
+		return gc;
+		
+	}
 }

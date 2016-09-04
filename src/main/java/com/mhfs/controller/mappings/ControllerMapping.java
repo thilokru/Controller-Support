@@ -110,8 +110,12 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	}
 
 	public List<Pair<String, String>> getButtonFunctions() {
+		return getButtonFunctions0(currentButtonMap, currentStickMap);
+	}
+	
+	private List<Pair<String, String>> getButtonFunctions0(Map<ICondition, IAction> buttonMap, Map<Usage, StickConfig> stickMap) {
 		List<Pair<String, String>> ret = Lists.<Pair<String, String>>newArrayList();
-		for(Entry<ICondition, IAction> entry : currentButtonMap.entrySet()) {
+		for(Entry<ICondition, IAction> entry : buttonMap.entrySet()) {
 			String con = "";
 			if(entry.getKey() instanceof ButtonCondition) {
 				con = ((ButtonCondition)entry.getKey()).getButtonName();
@@ -120,10 +124,15 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 			}
 			ret.add(Pair.of(con, entry.getValue().getActionDescription()));
 		}
-		for(Entry<Usage, StickConfig> entry : currentStickMap.entrySet()) {
+		for(Entry<Usage, StickConfig> entry : stickMap.entrySet()) {
 			ret.add(Pair.of(entry.getValue().getStickName(), entry.getKey().getDescription()));
 		}
 		return ret;
+	}
+
+	public List<Pair<String, String>> getIngameButtonFunctions() {
+		GameContext ingame = GameContext.getIngameContext(this.context.getController());
+		return getButtonFunctions0(select(buttonMap, ingame), select(stickMap, ingame));
 	}
 
 }

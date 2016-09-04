@@ -4,14 +4,16 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
-import com.mhfs.controller.gui.ButtonArranger;
+import com.mhfs.controller.gui.GuiScreenControllerHelp;
 import com.mhfs.controller.gui.LabelButtonInfo;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -25,8 +27,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
  *
  */
 public class ModEventHandler {
-	
-	private GuiScreen prevScreen = null;
 	
 	public void detectControllers() {
 		int count = Controllers.getControllerCount();
@@ -50,9 +50,7 @@ public class ModEventHandler {
 	@SubscribeEvent
 	public void handleGuiScreenEvent(GuiScreenEvent.DrawScreenEvent event) {
 		handleTick();
-		screenHandler(event);
 	}
-	
 	
 	@SubscribeEvent
 	public void handleClientTickEnd(ClientTickEvent event) {
@@ -70,13 +68,23 @@ public class ModEventHandler {
 		Controllers.clearEvents();
 	}
 	
-	private void screenHandler(GuiScreenEvent.DrawScreenEvent event) {
-		if(prevScreen != event.getGui()) {
-			prevScreen = event.getGui();
-			LabelButtonInfo.inject(event.getGui());
-			//ButtonArranger.arrangeButtonsVertical(event.getGui());
+	@SubscribeEvent
+	public void screenHandler(GuiScreenEvent.InitGuiEvent.Post event) {
+		LabelButtonInfo.inject(event.getGui());
+		if(event.getGui() instanceof GuiIngameMenu) {
+			event.getButtonList().add(new GuiButton(200, 0, 0, I18n.format("gui.controller")));
 		}
 	}
+	
+	@SubscribeEvent
+	public void handleButtonPress(GuiScreenEvent.ActionPerformedEvent.Post event) {
+		if(event.getGui() instanceof GuiIngameMenu) {
+			if(event.getButton().id == 200){
+				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenControllerHelp(event.getGui()));
+			}
+		}
+	}
+	
 	
 	@SubscribeEvent
 	public void handleConfigChange(ConfigChangedEvent event) {

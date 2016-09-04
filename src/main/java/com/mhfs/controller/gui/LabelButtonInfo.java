@@ -18,11 +18,10 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class LabelButtonInfo extends GuiLabel {
 	
-	private final static float buttonScale = 0.2F;
-	private final static int scaledTextureSize = 20;
-	private final static int boundary = 2;
+	public final static float buttonScale = 0.2F;
+	public final static int scaledTextureSize = 20;
+	public final static int boundary = 2;
 	
-	private List<Pair<String, String>> buttonFunctions;
 	private final FontRenderer fr;
 
 	public LabelButtonInfo(FontRenderer fr, int id, int x, int y, int width, int height) {
@@ -32,9 +31,7 @@ public class LabelButtonInfo extends GuiLabel {
 	
 	@Override
 	public void drawLabel(Minecraft mc, int mouseX, int mouseY) {
-		if(buttonFunctions == null) {
-			buttonFunctions = Config.INSTANCE.getMapping().getButtonFunctions();
-		}
+		List<Pair<String, String>> buttonFunctions = Config.INSTANCE.getMapping().getButtonFunctions();
 		
 		int width = 0;
 		for(Pair<String, String> entry : buttonFunctions) {
@@ -45,18 +42,23 @@ public class LabelButtonInfo extends GuiLabel {
 		GlStateManager.enableBlend();
 		drawRect(x - boundary, y - boundary, x + width + 2 * boundary, y + height + boundary, 0xAA000000);
 		
-		int textYOffset = (scaledTextureSize - fr.FONT_HEIGHT) / 2;
-		int xCursor = this.x;
+		int xCursor = x;
 		for(Pair<String, String> entry : buttonFunctions) {
-			GlStateManager.enableBlend();
-			xCursor += drawButton(xCursor, y, entry.getKey());
-			GlStateManager.disableBlend();
-			xCursor = this.fr.drawString(entry.getValue(), xCursor, this.y + textYOffset, 0xFFFFFF);
-			xCursor += boundary;
+			xCursor = drawSingleItem(entry.getKey(), entry.getValue(), xCursor, y);
 		}
 	}
+	
+	public int drawSingleItem(String buttonName, String desc, int x, int y) {
+		int textYOffset = (scaledTextureSize - fr.FONT_HEIGHT) / 2;
+		GlStateManager.enableBlend();
+		x += drawButton(x, y, buttonName);
+		GlStateManager.disableBlend();
+		x = fr.drawString(desc, x, y + textYOffset, 0xFFFFFF);
+		x += boundary;
+		return x;
+	}
 
-	private int drawButton(int x, int y, String key) {
+	private static int drawButton(int x, int y, String key) {
 		TextureHelper helper = ControllInfo.get().getTextureHelper();
 		SubTexture info = helper.getTextureInfo(key);
 		helper.drawScaledTextureAt(key, x, y, buttonScale);
@@ -74,5 +76,4 @@ public class LabelButtonInfo extends GuiLabel {
 			Throwables.propagate(t);
 		}
 	}
-
 }

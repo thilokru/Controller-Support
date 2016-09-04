@@ -1,6 +1,7 @@
 package com.mhfs.controller.actions;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 
 public class ActionKeyBind implements IAction{
@@ -41,7 +42,7 @@ public class ActionKeyBind implements IAction{
 	
 	@Override
 	public String getActionDescription() {
-		return binding.getDisplayName();
+		return I18n.format(binding.getKeyDescription());
 	}
 
 	public static void registerActions() {
