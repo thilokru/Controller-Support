@@ -38,7 +38,7 @@ public class ActionButtonChange extends ActionToEvent{
 		return true;
 	}
 
-	private void moveMouse(GuiButton button, int screenWidth, int screenHeight) {
+	public static void moveMouse(GuiButton button, int screenWidth, int screenHeight) {
 		int xOff = button.width > 20 ? 10 : button.width / 2;
 		int yOff = button.height / 2;
 		int x = button.xPosition + xOff;
@@ -58,22 +58,28 @@ public class ActionButtonChange extends ActionToEvent{
 		
 		GuiButton currentButton = null;
 		for(GuiButton button : buttonList) {
+			boolean tempEnabled = button.enabled;
+			button.enabled = true;
 			if(button.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
+				button.enabled = tempEnabled;
 				currentButton = button;
 				break;
 			}
+			button.enabled = tempEnabled;
 		}
 		
 		while(runCondition(currentX, currentY, screenWidth, screenHeight)) {
 			currentX += step * direction.getDX();
 			currentY += step * direction.getDY();
-			if(currentButton != null && currentButton.mousePressed(Minecraft.getMinecraft(), currentX, currentY)) {
-				continue;
-			}
 			for(GuiButton button : buttonList) {
+				if(button == currentButton) continue;
+				boolean tempEnabled = button.enabled;
+				button.enabled = true;
 				if(button.mousePressed(Minecraft.getMinecraft(), currentX, currentY)) {
+					button.enabled = tempEnabled;
 					return button;
 				}
+				button.enabled = tempEnabled;
 			}
 		}
 		return null;

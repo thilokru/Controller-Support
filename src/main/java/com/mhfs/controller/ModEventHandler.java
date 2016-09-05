@@ -8,6 +8,7 @@ import com.mhfs.controller.gui.GuiScreenControllerHelp;
 import com.mhfs.controller.gui.LabelButtonInfo;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
+import com.mhfs.controller.mappings.actions.ActionButtonChange;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -74,6 +75,7 @@ public class ModEventHandler {
 		if(event.getGui() instanceof GuiIngameMenu) {
 			event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
 		}
+		ActionButtonChange.moveMouse(event.getButtonList().get(0), event.getGui().width, event.getGui().height);
 	}
 	
 	@SubscribeEvent

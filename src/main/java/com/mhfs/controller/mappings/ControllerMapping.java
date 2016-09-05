@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.mhfs.controller.Config;
@@ -45,7 +46,14 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	public void apply() {
 		if(context.update()) {
 			currentStickMap = select(stickMap, context);
+			if(currentStickMap == null) {
+				currentStickMap = Maps.<Usage, StickConfig>newHashMap();
+			}
+			
 			currentButtonMap = select(buttonMap, context);
+			if(currentButtonMap == null) {
+				currentButtonMap = Maps.<IControll, IAction>newHashMap();
+			}
 		}
 		applyMouse();
 		applyButtons();
