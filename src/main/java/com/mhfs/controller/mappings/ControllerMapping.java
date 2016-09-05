@@ -16,7 +16,6 @@ import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
 import com.mhfs.controller.mappings.actions.ActionEmulationHelper;
 import com.mhfs.controller.mappings.actions.IAction;
-import com.mhfs.controller.mappings.conditions.ConditionSerializationHelper;
 import com.mhfs.controller.mappings.conditions.GameContext;
 import com.mhfs.controller.mappings.conditions.ICondition;
 import com.mhfs.controller.mappings.controlls.ButtonControll;
@@ -100,7 +99,7 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		try {
 			InputStream stream = manager.getResource(location).getInputStream();
 			Config cfg = Config.INSTANCE;
-			ConditionSerializationHelper.updateButtonMap(cfg.getController(), manager);
+			ControllInfo.updateButtonMap(cfg.getController(), manager);
 			ControllerMapping mapping = gson.fromJson(new InputStreamReader(stream), ControllerMapping.class);
 			mapping.location = location;
 			return mapping;

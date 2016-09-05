@@ -1,13 +1,5 @@
 package com.mhfs.controller.mappings.conditions;
 
-import org.lwjgl.input.Controller;
-
-import com.mhfs.controller.Config;
-import com.mhfs.controller.ControllerSupportMod;
-import com.mhfs.controller.mappings.ControllInfo;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-
 public class ConditionSerializationHelper {
 
 	public static String toString(ICondition value) {
@@ -36,20 +28,5 @@ public class ConditionSerializationHelper {
 		default:
 			throw new RuntimeException(String.format("Unknown condition type %s", op));
 		}
-	}
-
-	public static void updateButtonMap(Controller controller, IResourceManager manager) {
-		String name = controller.getName();
-		if(name.toLowerCase().contains("xbox")) {
-			setMap("xbox");
-		} else {
-			setMap(name);
-		}
-		ControllInfo.load(Config.INSTANCE.getButtonNameMapLocation(), manager);
-	}
-	
-	private static void setMap(String mapName) {
-		Config.INSTANCE.setButtonNameMapLocation(new ResourceLocation(ControllerSupportMod.MODID, String.format("maps/%s.map", mapName)));
-	}
-	
+	}	
 }
