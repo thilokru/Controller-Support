@@ -16,6 +16,7 @@ import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
 import com.mhfs.controller.mappings.actions.ActionEmulationHelper;
 import com.mhfs.controller.mappings.actions.IAction;
+import com.mhfs.controller.mappings.conditions.ConditionSerializationHelper;
 import com.mhfs.controller.mappings.conditions.GameContext;
 import com.mhfs.controller.mappings.conditions.ICondition;
 import com.mhfs.controller.mappings.controlls.ButtonControll;

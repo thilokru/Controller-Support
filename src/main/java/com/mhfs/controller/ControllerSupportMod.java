@@ -6,6 +6,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.mappings.ControllerMapping;
+import com.mhfs.controller.mappings.actions.ActionButtonChange;
 import com.mhfs.controller.mappings.actions.ActionEscape;
 import com.mhfs.controller.mappings.actions.ActionItemSwitch;
 import com.mhfs.controller.mappings.actions.ActionKeyBind;
@@ -62,6 +63,7 @@ public class ControllerSupportMod {
 		ActionRegistry.registerAction(new ActionLeftClick());
 		ActionRegistry.registerAction(new ActionRightClick());
 		ActionRegistry.registerAction(new ActionEscape());
+		ActionRegistry.registerAction(new ActionButtonChange());
 		ActionKeyBind.registerActions();
 		ActionItemSwitch.register();
 		

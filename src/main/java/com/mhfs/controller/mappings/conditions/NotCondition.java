@@ -1,7 +1,5 @@
 package com.mhfs.controller.mappings.conditions;
 
-import com.mhfs.controller.mappings.ConditionSerializationHelper;
-
 public class NotCondition implements ICondition{
 
 	private ICondition condition;

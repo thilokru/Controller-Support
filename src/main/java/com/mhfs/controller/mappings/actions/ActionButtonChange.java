@@ -3,6 +3,7 @@ package com.mhfs.controller.mappings.actions;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.Minecraft;
@@ -11,16 +12,29 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class ActionButtonChange extends ActionToEvent{
-	
-	private Direction direction;
 	private Field screenButtonListField;
 
 	@Override
 	public void buttonDown() {
-		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-		List<GuiButton> buttonList = reflectiveButtonListRetrieve(screen);
-		GuiButton button = findNextButton(buttonList, screen.width, screen.height);
-		moveMouse(button);
+		throw new RuntimeException("ActionButtonChange requires a Pair of Floats as argument!");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean buttonDown(Object arg) {
+		if(arg instanceof Pair) {
+			Pair<Float, Float> vals = (Pair<Float, Float>)arg;
+			Direction dir = Direction.fromValues(vals.getLeft(), vals.getRight());
+			if(dir == null)return true;
+			GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+			List<GuiButton> buttonList = reflectiveButtonListRetrieve(screen);
+			GuiButton button = findNextButton(buttonList, dir, screen.width, screen.height);
+			moveMouse(button);
+		} else {
+			throw new RuntimeException("ActionButtonChange only accepts Pairs of values as argument!");
+		}
+		
+		return true;
 	}
 
 	private void moveMouse(GuiButton button) {
@@ -31,7 +45,7 @@ public class ActionButtonChange extends ActionToEvent{
 		Mouse.setCursorPosition(x, y);
 	}
 
-	private GuiButton findNextButton(List<GuiButton> buttonList, int screenWidth, int screenHeight) {
+	private GuiButton findNextButton(List<GuiButton> buttonList, Direction direction, int screenWidth, int screenHeight) {
 		int mouseX = Mouse.getX();
 		int mouseY = Mouse.getY();
 		int step = 20 - 1;
@@ -60,12 +74,12 @@ public class ActionButtonChange extends ActionToEvent{
 	
 	@Override
 	public String getActionName() {
-		return direction.getAction();
+		return "BUTTON_CHANGE";
 	}
 
 	@Override
 	public String getActionDescription() {
-		return direction.getDescription();
+		return I18n.format("gui.button.change");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -86,35 +100,37 @@ public class ActionButtonChange extends ActionToEvent{
 	}
 	
 	private enum Direction {
-		UP("UP", "gui.button.up", 0, -1),
-		DOWN("DOWN", "gui.button.down", 0, 1),
-		LEFT("LEFT", "gui.button.left", -1, 0),
-		RIGHT("RIGHT", "gui.button.right", 1, 0);
+		UP(0, -1),
+		DOWN(0, 1),
+		LEFT(-1, 0),
+		RIGHT(1, 0);
 		
-		private String action, desc;
 		private int dx, dy;
 		
-		private Direction(String action, String desc, int dx, int dy) {
-			this.action = action;
-			this.desc = desc;
+		private Direction(int dx, int dy) {
 			this.dx = dx;
 			this.dy = dy;
 		}
-		
-		public String getAction() {
-			return String.format("BUTTON_CHANGE(%s)", action);
-		}
-		
-		public String getDescription() {
-			return I18n.format(desc);
-		}
-		
+
 		public int getDX() {
 			return dx;
 		}
 		
 		public int getDY() {
 			return dy;
+		}
+		
+		public static Direction fromValues(float x, float y) {
+			if(x == -1) {
+				return LEFT;
+			} else if(x == 1) {
+				return RIGHT;
+			} else if(y == -1) {
+				return UP;
+			} else if(y == 1) {
+				return DOWN;
+			}
+			return null;
 		}
 	}
 

@@ -1,18 +1,10 @@
-package com.mhfs.controller.mappings;
+package com.mhfs.controller.mappings.conditions;
 
 import org.lwjgl.input.Controller;
 
 import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
-import com.mhfs.controller.mappings.conditions.AndCondition;
-import com.mhfs.controller.mappings.conditions.ICondition;
-import com.mhfs.controller.mappings.conditions.IngameCondition;
-import com.mhfs.controller.mappings.conditions.NotCondition;
-import com.mhfs.controller.mappings.conditions.OrCondition;
-import com.mhfs.controller.mappings.conditions.ScreenCondition;
-import com.mhfs.controller.mappings.controlls.ButtonControll;
-import com.mhfs.controller.mappings.controlls.StickControll;
-
+import com.mhfs.controller.mappings.ControllInfo;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -39,10 +31,6 @@ public class ConditionSerializationHelper {
 			return new NotCondition(args);
 		case "screen":
 			return new ScreenCondition(args);
-		case "button":
-			return new ButtonControll(args);
-		case "stick":
-			return new StickControll(args);
 		case "ingame":
 			return new IngameCondition();
 		default:

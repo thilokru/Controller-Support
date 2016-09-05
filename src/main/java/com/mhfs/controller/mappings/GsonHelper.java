@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.mhfs.controller.mappings.actions.ActionRegistry;
 import com.mhfs.controller.mappings.actions.IAction;
+import com.mhfs.controller.mappings.conditions.ConditionSerializationHelper;
 import com.mhfs.controller.mappings.conditions.ICondition;
 
 import net.minecraft.util.ResourceLocation;
