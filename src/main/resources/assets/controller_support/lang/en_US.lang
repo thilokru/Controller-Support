@@ -1,8 +1,9 @@
-action.leftClick=left click
-action.rightClick=right click
-action.escape=escape
-action.prevItem=previous item
-action.nextItem=next item
-usage.movement=move
-usage.mouse=mouse
-usage.view=view
+action.leftClick=Left Click
+action.rightClick=Right Click
+action.escape=Escape
+action.prevItem=Previous Item
+action.nextItem=Next Item
+usage.movement=Move
+usage.mouse=Mouse
+usage.view=View
+gui.controller=Controller Controlls

@@ -72,7 +72,7 @@ public class ModEventHandler {
 	public void screenHandler(GuiScreenEvent.InitGuiEvent.Post event) {
 		LabelButtonInfo.inject(event.getGui());
 		if(event.getGui() instanceof GuiIngameMenu) {
-			event.getButtonList().add(new GuiButton(200, 0, 0, I18n.format("gui.controller")));
+			event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
 		}
 	}
 	
