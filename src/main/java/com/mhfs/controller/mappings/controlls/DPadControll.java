@@ -28,4 +28,9 @@ public class DPadControll implements IControll {
 		return Pair.of(controller.getPovX(), controller.getPovY());
 	}
 
+	@Override
+	public String getControllName() {
+		return "DPAD";
+	}
+
 }

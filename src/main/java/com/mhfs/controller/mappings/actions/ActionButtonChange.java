@@ -29,7 +29,8 @@ public class ActionButtonChange extends ActionToEvent{
 			GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 			List<GuiButton> buttonList = reflectiveButtonListRetrieve(screen);
 			GuiButton button = findNextButton(buttonList, dir, screen.width, screen.height);
-			moveMouse(button);
+			if(button == null) return true;
+			moveMouse(button, screen.width, screen.height);
 		} else {
 			throw new RuntimeException("ActionButtonChange only accepts Pairs of values as argument!");
 		}
@@ -37,25 +38,38 @@ public class ActionButtonChange extends ActionToEvent{
 		return true;
 	}
 
-	private void moveMouse(GuiButton button) {
-		int xOff = button.width / 2;
+	private void moveMouse(GuiButton button, int screenWidth, int screenHeight) {
+		int xOff = button.width > 20 ? 10 : button.width / 2;
 		int yOff = button.height / 2;
 		int x = button.xPosition + xOff;
 		int y = button.yPosition + yOff;
-		Mouse.setCursorPosition(x, y);
+		int glX = x * Minecraft.getMinecraft().displayWidth / screenWidth;
+		int glY = (Minecraft.getMinecraft().displayHeight / screenHeight) * (1 + screenHeight - y);
+		Mouse.setCursorPosition(glX, glY);
 	}
 
 	private GuiButton findNextButton(List<GuiButton> buttonList, Direction direction, int screenWidth, int screenHeight) {
-		int mouseX = Mouse.getX();
-		int mouseY = Mouse.getY();
+		int mouseX = Mouse.getEventX() * screenWidth / Minecraft.getMinecraft().displayWidth;
+		int mouseY = screenHeight - Mouse.getEventY() * screenHeight / Minecraft.getMinecraft().displayHeight - 1;
 		int step = 20 - 1;
 		
 		int currentX = mouseX;
 		int currentY = mouseY;
 		
+		GuiButton currentButton = null;
+		for(GuiButton button : buttonList) {
+			if(button.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
+				currentButton = button;
+				break;
+			}
+		}
+		
 		while(runCondition(currentX, currentY, screenWidth, screenHeight)) {
 			currentX += step * direction.getDX();
 			currentY += step * direction.getDY();
+			if(currentButton != null && currentButton.mousePressed(Minecraft.getMinecraft(), currentX, currentY)) {
+				continue;
+			}
 			for(GuiButton button : buttonList) {
 				if(button.mousePressed(Minecraft.getMinecraft(), currentX, currentY)) {
 					return button;

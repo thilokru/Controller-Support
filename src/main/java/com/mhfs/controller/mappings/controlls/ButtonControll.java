@@ -22,10 +22,10 @@ public class ButtonControll implements IControll{
 	
 	@Override
 	public String toSaveString() {
-		return String.format("BUTTON(%s)", getButtonName());
+		return String.format("BUTTON(%s)", getControllName());
 	}
 
-	public String getButtonName() {
+	public String getControllName() {
 		return ControllInfo.get().getButtonName(buttonID);
 	}
 

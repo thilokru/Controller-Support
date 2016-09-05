@@ -11,6 +11,8 @@ import com.mhfs.controller.mappings.actions.ActionRegistry;
 import com.mhfs.controller.mappings.actions.IAction;
 import com.mhfs.controller.mappings.conditions.ConditionSerializationHelper;
 import com.mhfs.controller.mappings.conditions.ICondition;
+import com.mhfs.controller.mappings.controlls.ControllSerializationHelper;
+import com.mhfs.controller.mappings.controlls.IControll;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -18,6 +20,7 @@ public class GsonHelper {
 	
 	public static Gson getGson(GsonBuilder builder) {
 		builder.enableComplexMapKeySerialization();
+		builder.registerTypeHierarchyAdapter(IControll.class, new ControllTypeAdapter());
 		builder.registerTypeHierarchyAdapter(ICondition.class, new ConditionTypeAdapter());
 		builder.registerTypeHierarchyAdapter(IAction.class, new ActionTypeAdapter());
 		builder.registerTypeHierarchyAdapter(StickConfig.class, new StickConfigTypeAdapter());
@@ -27,6 +30,18 @@ public class GsonHelper {
 	
 	public static Gson getExposedGson() {
 		return getGson(new GsonBuilder().excludeFieldsWithoutExposeAnnotation());
+	}
+	
+	public static class ControllTypeAdapter extends TypeAdapter<IControll> {
+		@Override
+		public void write(JsonWriter out, IControll value) throws IOException {
+			out.value(ControllSerializationHelper.toString(value));
+		}
+		
+		@Override
+		public IControll read(JsonReader in) throws IOException {
+			return ControllSerializationHelper.fromString(in.nextString());
+		}
 	}
 	
 	public static class ConditionTypeAdapter extends TypeAdapter<ICondition> {

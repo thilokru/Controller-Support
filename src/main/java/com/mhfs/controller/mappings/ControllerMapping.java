@@ -16,11 +16,10 @@ import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
 import com.mhfs.controller.mappings.actions.ActionEmulationHelper;
 import com.mhfs.controller.mappings.actions.IAction;
+import com.mhfs.controller.mappings.actions.IParametrizedAction;
 import com.mhfs.controller.mappings.conditions.GameContext;
 import com.mhfs.controller.mappings.conditions.ICondition;
-import com.mhfs.controller.mappings.controlls.ButtonControll;
-import com.mhfs.controller.mappings.controlls.StickControll;
-
+import com.mhfs.controller.mappings.controlls.IControll;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
@@ -30,14 +29,14 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	private final static Gson gson = GsonHelper.getExposedGson();
 	
 	@Expose
-	private Map<ICondition, Map<ICondition, IAction>> buttonMap;
+	private Map<ICondition, Map<IControll, IAction>> buttonMap;
 	@Expose
 	private Map<ICondition, Map<Usage, StickConfig>> stickMap;
 	
 	private volatile ResourceLocation location;
 	private volatile GameContext context;
 	private volatile Map<Usage, StickConfig> currentStickMap;
-	private volatile Map<ICondition, IAction> currentButtonMap;
+	private volatile Map<IControll, IAction> currentButtonMap;
 	
 	public void init(GameContext context) {
 		this.context = context;
@@ -62,8 +61,16 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	}
 	
 	private void applyButtons() {
-		for(Entry<ICondition, IAction> entry : currentButtonMap.entrySet()) {
-			if(entry.getKey().check(this.context)) {
+		for(Entry<IControll, IAction> entry : currentButtonMap.entrySet()) {
+			IControll controll = entry.getKey();
+			IAction action = entry.getValue();
+			if(controll.check(this.context)) {
+				if(controll.hasAdditionalData()){
+					if(action instanceof IParametrizedAction) {
+						((IParametrizedAction)action).run(controll.getData(context));
+						continue;
+					}
+				}
 				entry.getValue().run();
 			} else {
 				entry.getValue().notRun();
@@ -113,15 +120,10 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		return getButtonFunctions0(currentButtonMap, currentStickMap);
 	}
 	
-	private List<Pair<String, String>> getButtonFunctions0(Map<ICondition, IAction> buttonMap, Map<Usage, StickConfig> stickMap) {
+	private List<Pair<String, String>> getButtonFunctions0(Map<IControll, IAction> buttonMap, Map<Usage, StickConfig> stickMap) {
 		List<Pair<String, String>> ret = Lists.<Pair<String, String>>newArrayList();
-		for(Entry<ICondition, IAction> entry : buttonMap.entrySet()) {
-			String con = "";
-			if(entry.getKey() instanceof ButtonControll) {
-				con = ((ButtonControll)entry.getKey()).getButtonName();
-			} else if (entry.getKey() instanceof StickControll) {
-				con = ((StickControll)entry.getKey()).getStickName();
-			}
+		for(Entry<IControll, IAction> entry : buttonMap.entrySet()) {
+			String con = entry.getKey().getControllName();
 			ret.add(Pair.of(con, entry.getValue().getActionDescription()));
 		}
 		for(Entry<Usage, StickConfig> entry : stickMap.entrySet()) {

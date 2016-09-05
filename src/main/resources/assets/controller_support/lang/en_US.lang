@@ -7,3 +7,4 @@ usage.movement=Move
 usage.mouse=Mouse
 usage.view=View
 gui.controller=Controller Controlls
+gui.button.change=Select Button

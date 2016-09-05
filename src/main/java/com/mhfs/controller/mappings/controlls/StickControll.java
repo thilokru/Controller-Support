@@ -47,13 +47,13 @@ public class StickControll implements IControll {
 	@Override
 	public String toSaveString() {
 		if(controllName != null) {
-			return String.format("STICK(%s,%f,%s,%s)", getStickName(), threshold, Boolean.toString(smallerThan), controllName);
+			return String.format("STICK(%s,%f,%s,%s)", getControllName(), threshold, Boolean.toString(smallerThan), controllName);
 		} else {
-			return String.format("STICK(%s,%f,%s)", getStickName(), threshold, Boolean.toString(smallerThan));
+			return String.format("STICK(%s,%f,%s)", getControllName(), threshold, Boolean.toString(smallerThan));
 		}
 	}
 
-	public String getStickName() {
+	public String getControllName() {
 		return controllName == null ? ControllInfo.get().getAxisName(axis) : controllName;
 	}
 
