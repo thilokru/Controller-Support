@@ -1,24 +1,25 @@
-package com.mhfs.controller.mappings.conditions;
+package com.mhfs.controller.mappings.controlls;
 
 import org.lwjgl.input.Controller;
 
 import com.mhfs.controller.mappings.ControllInfo;
 import com.mhfs.controller.mappings.SpecialCaseAxes;
+import com.mhfs.controller.mappings.conditions.GameContext;
 
-public class StickCondition implements ICondition {
+public class StickControll implements IControll {
 	
 	private int axis;
 	private float threshold;
 	private boolean smallerThan;
 	private String controllName;
 	
-	public StickCondition(int axis, float threshold, boolean smallerThan) {
+	public StickControll(int axis, float threshold, boolean smallerThan) {
 		this.axis = axis;
 		this.threshold = threshold;
 		this.smallerThan = smallerThan;
 	}
 
-	public StickCondition(String args) {
+	public StickControll(String args) {
 		String[] sub = args.split(",");
 		this.axis = ControllInfo.get().getAxisID(sub[0].trim());
 		this.threshold = Float.parseFloat(sub[1].trim());
@@ -54,6 +55,16 @@ public class StickCondition implements ICondition {
 
 	public String getStickName() {
 		return controllName == null ? ControllInfo.get().getAxisName(axis) : controllName;
+	}
+
+	@Override
+	public boolean hasAdditionalData() {
+		return true;
+	}
+
+	@Override
+	public Object getData(GameContext context) {
+		return context.getController().getAxisValue(axis);
 	}
 
 }

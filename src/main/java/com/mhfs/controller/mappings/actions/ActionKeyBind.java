@@ -1,4 +1,4 @@
-package com.mhfs.controller.actions;
+package com.mhfs.controller.mappings.actions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

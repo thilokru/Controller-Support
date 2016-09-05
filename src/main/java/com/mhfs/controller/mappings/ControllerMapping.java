@@ -14,12 +14,12 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
-import com.mhfs.controller.actions.ActionEmulationHelper;
-import com.mhfs.controller.actions.IAction;
-import com.mhfs.controller.mappings.conditions.ButtonCondition;
+import com.mhfs.controller.mappings.actions.ActionEmulationHelper;
+import com.mhfs.controller.mappings.actions.IAction;
 import com.mhfs.controller.mappings.conditions.GameContext;
 import com.mhfs.controller.mappings.conditions.ICondition;
-import com.mhfs.controller.mappings.conditions.StickCondition;
+import com.mhfs.controller.mappings.controlls.ButtonControll;
+import com.mhfs.controller.mappings.controlls.StickControll;
 
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -117,10 +117,10 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		List<Pair<String, String>> ret = Lists.<Pair<String, String>>newArrayList();
 		for(Entry<ICondition, IAction> entry : buttonMap.entrySet()) {
 			String con = "";
-			if(entry.getKey() instanceof ButtonCondition) {
-				con = ((ButtonCondition)entry.getKey()).getButtonName();
-			} else if (entry.getKey() instanceof StickCondition) {
-				con = ((StickCondition)entry.getKey()).getStickName();
+			if(entry.getKey() instanceof ButtonControll) {
+				con = ((ButtonControll)entry.getKey()).getButtonName();
+			} else if (entry.getKey() instanceof StickControll) {
+				con = ((StickControll)entry.getKey()).getStickName();
 			}
 			ret.add(Pair.of(con, entry.getValue().getActionDescription()));
 		}

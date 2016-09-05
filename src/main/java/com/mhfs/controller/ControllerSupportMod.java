@@ -5,13 +5,13 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 
-import com.mhfs.controller.actions.ActionEscape;
-import com.mhfs.controller.actions.ActionItemSwitch;
-import com.mhfs.controller.actions.ActionKeyBind;
-import com.mhfs.controller.actions.ActionLeftClick;
-import com.mhfs.controller.actions.ActionRegistry;
-import com.mhfs.controller.actions.ActionRightClick;
 import com.mhfs.controller.mappings.ControllerMapping;
+import com.mhfs.controller.mappings.actions.ActionEscape;
+import com.mhfs.controller.mappings.actions.ActionItemSwitch;
+import com.mhfs.controller.mappings.actions.ActionKeyBind;
+import com.mhfs.controller.mappings.actions.ActionLeftClick;
+import com.mhfs.controller.mappings.actions.ActionRegistry;
+import com.mhfs.controller.mappings.actions.ActionRightClick;
 import com.mhfs.controller.mappings.conditions.GameContext;
 
 import net.minecraft.client.Minecraft;

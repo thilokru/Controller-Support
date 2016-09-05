@@ -1,4 +1,4 @@
-package com.mhfs.controller.actions;
+package com.mhfs.controller.mappings.actions;
 
 import java.util.HashMap;
 import java.util.Map;
