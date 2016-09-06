@@ -75,7 +75,8 @@ public class ModEventHandler {
 		if(event.getGui() instanceof GuiIngameMenu) {
 			event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
 		}
-		ActionButtonChange.moveMouse(event.getButtonList().get(0), event.getGui().width, event.getGui().height);
+		if(event.getButtonList().size() != 0)
+			ActionButtonChange.moveMouse(event.getButtonList().get(0), event.getGui().width, event.getGui().height);
 	}
 	
 	@SubscribeEvent

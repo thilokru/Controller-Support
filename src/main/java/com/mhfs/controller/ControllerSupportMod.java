@@ -11,6 +11,7 @@ import com.mhfs.controller.mappings.actions.ActionEscape;
 import com.mhfs.controller.mappings.actions.ActionItemSwitch;
 import com.mhfs.controller.mappings.actions.ActionKeyBind;
 import com.mhfs.controller.mappings.actions.ActionLeftClick;
+import com.mhfs.controller.mappings.actions.ActionListSelect;
 import com.mhfs.controller.mappings.actions.ActionRegistry;
 import com.mhfs.controller.mappings.actions.ActionRightClick;
 import com.mhfs.controller.mappings.conditions.GameContext;
@@ -64,6 +65,7 @@ public class ControllerSupportMod {
 		ActionRegistry.registerAction(new ActionRightClick());
 		ActionRegistry.registerAction(new ActionEscape());
 		ActionRegistry.registerAction(new ActionButtonChange());
+		ActionRegistry.registerAction(new ActionListSelect());
 		ActionKeyBind.registerActions();
 		ActionItemSwitch.register();
 		
