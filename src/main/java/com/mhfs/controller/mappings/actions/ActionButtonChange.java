@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
-	private Field screenButtonListField;
+	private static Field screenButtonListField;
 
 	@Override
 	public void buttonDown() {
@@ -97,7 +97,7 @@ public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<GuiButton> reflectiveButtonListRetrieve(GuiScreen screen) {
+	public static List<GuiButton> reflectiveButtonListRetrieve(GuiScreen screen) {
 		if(screenButtonListField == null) {
 			try {
 				screenButtonListField = GuiScreen.class.getDeclaredField("buttonList");
