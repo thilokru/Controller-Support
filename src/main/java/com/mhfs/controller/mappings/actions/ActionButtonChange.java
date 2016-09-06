@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-public class ActionButtonChange extends ActionToEvent<Object>{
+public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
 	private Field screenButtonListField;
 
 	@Override
@@ -19,22 +19,16 @@ public class ActionButtonChange extends ActionToEvent<Object>{
 		throw new RuntimeException("ActionButtonChange requires a Pair of Floats as argument!");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public boolean buttonDown(Object arg) {
-		if(arg instanceof Pair) {
-			Pair<Float, Float> vals = (Pair<Float, Float>)arg;
-			Direction dir = Direction.fromValues(vals.getLeft(), vals.getRight());
-			if(dir == null)return true;
-			GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-			List<GuiButton> buttonList = reflectiveButtonListRetrieve(screen);
-			GuiButton button = findNextButton(buttonList, dir, screen.width, screen.height);
-			if(button == null) return true;
-			moveMouse(button, screen.width, screen.height);
-		} else {
-			throw new RuntimeException("ActionButtonChange only accepts Pairs of values as argument!");
-		}
-		
+	public boolean buttonDown(Pair<Float, Float> arg) {
+		Pair<Float, Float> vals = (Pair<Float, Float>)arg;
+		Direction dir = Direction.fromValues(vals.getLeft(), vals.getRight());
+		if(dir == null)return true;
+		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+		List<GuiButton> buttonList = reflectiveButtonListRetrieve(screen);
+		GuiButton button = findNextButton(buttonList, dir, screen.width, screen.height);
+		if(button == null) return true;
+		moveMouse(button, screen.width, screen.height);
 		return true;
 	}
 
