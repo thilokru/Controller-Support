@@ -6,7 +6,7 @@ import com.mhfs.controller.mappings.ControllInfo;
 import com.mhfs.controller.mappings.SpecialCaseAxes;
 import com.mhfs.controller.mappings.conditions.GameContext;
 
-public class StickControll implements IControll {
+public class StickControll implements IControll<Float> {
 	
 	private int axis;
 	private float threshold;
@@ -63,7 +63,7 @@ public class StickControll implements IControll {
 	}
 
 	@Override
-	public Object getData(GameContext context) {
+	public Float getData(GameContext context) {
 		return context.getController().getAxisValue(axis);
 	}
 

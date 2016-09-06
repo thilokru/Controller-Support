@@ -1,6 +1,11 @@
 package com.mhfs.controller.mappings.actions;
 
-public abstract class ActionToEvent implements IParametrizedAction {
+/**
+ * @author Thilo
+ *
+ * @param <T> If you don't require extra values, just make it Object.
+ */
+public abstract class ActionToEvent<T> implements IParametrizedAction<T> {
 	
 	private boolean allowToggleOn = true, allowToggleOff = false;
 
@@ -12,7 +17,7 @@ public abstract class ActionToEvent implements IParametrizedAction {
 		this.allowToggleOff = true;
 	}
 	
-	public final void run(Object arg) {
+	public final void run(T arg) {
 		if(allowToggleOn)
 			if(!buttonDown(arg))
 				buttonDown();
@@ -35,7 +40,7 @@ public abstract class ActionToEvent implements IParametrizedAction {
 	 * @param arg the given argument / parameter
 	 * @return if you have implemented this method.
 	 */
-	public boolean buttonDown(Object arg) {
+	public boolean buttonDown(T arg) {
 		return false;
 	}
 

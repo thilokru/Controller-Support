@@ -2,7 +2,7 @@ package com.mhfs.controller.mappings.actions;
 
 import net.minecraft.client.resources.I18n;
 
-public class ActionRightClick extends ActionToEvent {
+public class ActionRightClick extends ActionToEvent<Object> {
 	
 	@Override
 	public void buttonDown() {

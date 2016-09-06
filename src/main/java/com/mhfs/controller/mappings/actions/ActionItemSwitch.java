@@ -3,7 +3,7 @@ package com.mhfs.controller.mappings.actions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
-public class ActionItemSwitch extends ActionToEvent{
+public class ActionItemSwitch extends ActionToEvent<Object>{
 	
 	private boolean down;
 	

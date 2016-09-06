@@ -30,14 +30,14 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	private final static Gson gson = GsonHelper.getExposedGson();
 	
 	@Expose
-	private Map<ICondition, Map<IControll, IAction>> buttonMap;
+	private Map<ICondition, Map<IControll<?>, IAction>> buttonMap;
 	@Expose
 	private Map<ICondition, Map<Usage, StickConfig>> stickMap;
 	
 	private volatile ResourceLocation location;
 	private volatile GameContext context;
 	private volatile Map<Usage, StickConfig> currentStickMap;
-	private volatile Map<IControll, IAction> currentButtonMap;
+	private volatile Map<IControll<?>, IAction> currentButtonMap;
 	
 	public void init(GameContext context) {
 		this.context = context;
@@ -52,7 +52,7 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 			
 			currentButtonMap = select(buttonMap, context);
 			if(currentButtonMap == null) {
-				currentButtonMap = Maps.<IControll, IAction>newHashMap();
+				currentButtonMap = Maps.<IControll<?>, IAction>newHashMap();
 			}
 		}
 		applyMouse();
@@ -69,20 +69,28 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	}
 	
 	private void applyButtons() {
-		for(Entry<IControll, IAction> entry : currentButtonMap.entrySet()) {
-			IControll controll = entry.getKey();
+		for(Entry<IControll<?>, IAction> entry : currentButtonMap.entrySet()) {
+			IControll<?> controll = entry.getKey();
 			IAction action = entry.getValue();
-			if(controll.check(this.context)) {
-				if(controll.hasAdditionalData()){
-					if(action instanceof IParametrizedAction) {
-						((IParametrizedAction)action).run(controll.getData(context));
-						continue;
+			handleControll(controll, action);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> void handleControll(IControll<T> controll, IAction action) {
+		if(controll.check(this.context)) {
+			if(controll.hasAdditionalData()){
+				if(action instanceof IParametrizedAction<?>) {
+					try {
+						((IParametrizedAction<T>)action).run(controll.getData(context));
+					} catch (ClassCastException e) {
+						throw new RuntimeException("Invalid argument for action! " + action.getActionName() + " " + controll.getControllName(), e);
 					}
 				}
-				entry.getValue().run();
-			} else {
-				entry.getValue().notRun();
 			}
+			action.run();
+		} else {
+			action.notRun();
 		}
 	}
 	
@@ -128,9 +136,9 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		return getButtonFunctions0(currentButtonMap, currentStickMap);
 	}
 	
-	private List<Pair<String, String>> getButtonFunctions0(Map<IControll, IAction> buttonMap, Map<Usage, StickConfig> stickMap) {
+	private List<Pair<String, String>> getButtonFunctions0(Map<IControll<?>, IAction> buttonMap, Map<Usage, StickConfig> stickMap) {
 		List<Pair<String, String>> ret = Lists.<Pair<String, String>>newArrayList();
-		for(Entry<IControll, IAction> entry : buttonMap.entrySet()) {
+		for(Entry<IControll<?>, IAction> entry : buttonMap.entrySet()) {
 			String con = entry.getKey().getControllName();
 			ret.add(Pair.of(con, entry.getValue().getActionDescription()));
 		}

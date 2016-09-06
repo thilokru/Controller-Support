@@ -2,7 +2,7 @@ package com.mhfs.controller.mappings.actions;
 
 import net.minecraft.client.resources.I18n;
 
-public class ActionLeftClick extends ActionToEvent {
+public class ActionLeftClick extends ActionToEvent<Object> {
 
 	@Override
 	public String getActionName() {

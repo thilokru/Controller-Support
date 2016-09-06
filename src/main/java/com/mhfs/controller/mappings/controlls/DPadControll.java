@@ -5,7 +5,7 @@ import org.lwjgl.input.Controller;
 
 import com.mhfs.controller.mappings.conditions.GameContext;
 
-public class DPadControll implements IControll {
+public class DPadControll implements IControll<Pair<Float, Float>> {
 
 	@Override
 	public boolean check(GameContext context) {
@@ -23,7 +23,7 @@ public class DPadControll implements IControll {
 	}
 
 	@Override
-	public Object getData(GameContext context) {
+	public Pair<Float, Float> getData(GameContext context) {
 		Controller controller = context.getController();
 		return Pair.of(controller.getPovX(), controller.getPovY());
 	}

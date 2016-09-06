@@ -32,14 +32,14 @@ public class GsonHelper {
 		return getGson(new GsonBuilder().excludeFieldsWithoutExposeAnnotation());
 	}
 	
-	public static class ControllTypeAdapter extends TypeAdapter<IControll> {
+	public static class ControllTypeAdapter extends TypeAdapter<IControll<? extends Object>> {
 		@Override
-		public void write(JsonWriter out, IControll value) throws IOException {
+		public void write(JsonWriter out, IControll<?> value) throws IOException {
 			out.value(ControllSerializationHelper.toString(value));
 		}
 		
 		@Override
-		public IControll read(JsonReader in) throws IOException {
+		public IControll<?> read(JsonReader in) throws IOException {
 			return ControllSerializationHelper.fromString(in.nextString());
 		}
 	}

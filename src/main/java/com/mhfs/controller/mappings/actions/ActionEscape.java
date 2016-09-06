@@ -2,7 +2,7 @@ package com.mhfs.controller.mappings.actions;
 
 import net.minecraft.client.resources.I18n;
 
-public class ActionEscape extends ActionToEvent{
+public class ActionEscape extends ActionToEvent<Object>{
 
 	@Override
 	public void buttonDown() {

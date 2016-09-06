@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-public class ActionButtonChange extends ActionToEvent{
+public class ActionButtonChange extends ActionToEvent<Object>{
 	private Field screenButtonListField;
 
 	@Override

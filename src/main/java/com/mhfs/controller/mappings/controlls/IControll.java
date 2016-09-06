@@ -2,7 +2,7 @@ package com.mhfs.controller.mappings.controlls;
 
 import com.mhfs.controller.mappings.conditions.GameContext;
 
-public interface IControll {
+public interface IControll<T> {
 	
 	public boolean check(GameContext context);
 	
@@ -10,7 +10,7 @@ public interface IControll {
 	
 	public boolean hasAdditionalData();
 	
-	public Object getData(GameContext context);
+	public T getData(GameContext context);
 
 	public String getControllName();
 }

@@ -2,11 +2,11 @@ package com.mhfs.controller.mappings.controlls;
 
 public class ControllSerializationHelper {
 
-	public static String toString(IControll value) {
+	public static String toString(IControll<?> value) {
 		return value.toSaveString();
 	}
 
-	public static IControll fromString(String serializedCondition) {
+	public static IControll<?> fromString(String serializedCondition) {
 		int openingIndex = serializedCondition.indexOf('(');
 		int closingIndex = serializedCondition.lastIndexOf(')');
 		if(openingIndex < 0 || closingIndex < 0 || openingIndex >= serializedCondition.length() || closingIndex > serializedCondition.length()){

@@ -3,7 +3,7 @@ package com.mhfs.controller.mappings.controlls;
 import com.mhfs.controller.mappings.ControllInfo;
 import com.mhfs.controller.mappings.conditions.GameContext;
 
-public class ButtonControll implements IControll{
+public class ButtonControll implements IControll<Void>{
 	
 	private int buttonID;
 	
@@ -35,7 +35,7 @@ public class ButtonControll implements IControll{
 	}
 
 	@Override
-	public Object getData(GameContext context) {
+	public Void getData(GameContext context) {
 		return null;
 	}
 
