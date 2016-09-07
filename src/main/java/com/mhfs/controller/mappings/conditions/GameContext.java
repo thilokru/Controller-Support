@@ -33,6 +33,9 @@ public class GameContext {
 	}
 	
 	public boolean isScreenInstanceOf(Class<? extends GuiScreen> clazz) {
+		if(currentScreen == null) {
+			return false;
+		}
 		return clazz.isAssignableFrom(currentScreen.getClass());
 	}
 	

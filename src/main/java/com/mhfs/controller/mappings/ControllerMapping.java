@@ -45,6 +45,11 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	
 	public void apply() {
 		if(context.update()) {
+			if(currentButtonMap != null){
+				for(IAction actions : currentButtonMap.values()) {
+					actions.notRun();
+				}
+			}
 			currentStickMap = select(stickMap, context);
 			if(currentStickMap == null) {
 				currentStickMap = Maps.<Usage, StickConfig>newHashMap();
