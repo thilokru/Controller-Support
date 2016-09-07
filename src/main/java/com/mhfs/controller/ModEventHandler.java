@@ -5,6 +5,7 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.gui.GuiScreenControllerHelp;
+import com.mhfs.controller.gui.GuiTextInput;
 import com.mhfs.controller.gui.LabelButtonInfo;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
@@ -14,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -83,7 +85,7 @@ public class ModEventHandler {
 	public void handleButtonPress(GuiScreenEvent.ActionPerformedEvent.Post event) {
 		if(event.getGui() instanceof GuiIngameMenu) {
 			if(event.getButton().id == 200){
-				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenControllerHelp(event.getGui()));
+				Minecraft.getMinecraft().displayGuiScreen(new GuiTextInput(event.getGui(), new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, 0, 0, 0, 0))/*new GuiScreenControllerHelp(event.getGui())*/);
 			}
 		}
 	}

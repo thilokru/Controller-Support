@@ -7,6 +7,7 @@ import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.mappings.ControllerMapping;
 import com.mhfs.controller.mappings.actions.ActionButtonChange;
+import com.mhfs.controller.mappings.actions.ActionButtonState;
 import com.mhfs.controller.mappings.actions.ActionEscape;
 import com.mhfs.controller.mappings.actions.ActionItemSwitch;
 import com.mhfs.controller.mappings.actions.ActionKeyBind;
@@ -66,6 +67,10 @@ public class ControllerSupportMod {
 		ActionRegistry.registerAction(new ActionEscape());
 		ActionRegistry.registerAction(new ActionButtonChange());
 		ActionRegistry.registerAction(new ActionListSelect());
+		ActionRegistry.registerAction(new ActionButtonState("DELETE_LAST", "gui.input.delete"));
+		ActionRegistry.registerAction(new ActionButtonState("CAPITAL", "gui.input.capital"));
+		ActionRegistry.registerAction(new ActionButtonState("SPECIAL_CHAR", "gui.input.special"));
+		ActionRegistry.registerAction(new ActionButtonState("SELECT_CHAR", "gui.input.select"));
 		ActionKeyBind.registerActions();
 		ActionItemSwitch.register();
 		
