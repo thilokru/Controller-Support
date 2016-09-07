@@ -6,9 +6,13 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
 public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
@@ -25,24 +29,24 @@ public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
 		Direction dir = Direction.fromValues(vals.getLeft(), vals.getRight());
 		if(dir == null)return true;
 		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-		List<GuiButton> buttonList = reflectiveButtonListRetrieve(screen);
-		GuiButton button = findNextButton(buttonList, dir, screen.width, screen.height);
+		List<Wrapper> buttonList = getMergedElementList(screen);
+		Wrapper button = findNextGuiElement(buttonList, dir, screen.width, screen.height);
 		if(button == null) return true;
 		moveMouse(button, screen.width, screen.height);
 		return true;
 	}
 
-	public static void moveMouse(GuiButton button, int screenWidth, int screenHeight) {
+	public static void moveMouse(Wrapper button, int screenWidth, int screenHeight) {
 		int xOff = button.width > 20 ? 10 : button.width / 2;
 		int yOff = button.height / 2;
-		int x = button.xPosition + xOff;
-		int y = button.yPosition + yOff;
+		int x = button.x + xOff;
+		int y = button.y + yOff;
 		int glX = x * Minecraft.getMinecraft().displayWidth / screenWidth;
 		int glY = (Minecraft.getMinecraft().displayHeight / screenHeight) * (1 + screenHeight - y);
 		Mouse.setCursorPosition(glX, glY);
 	}
 
-	private GuiButton findNextButton(List<GuiButton> buttonList, Direction direction, int screenWidth, int screenHeight) {
+	private Wrapper findNextGuiElement(List<Wrapper> buttonList, Direction direction, int screenWidth, int screenHeight) {
 		int mouseX = Mouse.getEventX() * screenWidth / Minecraft.getMinecraft().displayWidth;
 		int mouseY = screenHeight - Mouse.getEventY() * screenHeight / Minecraft.getMinecraft().displayHeight - 1;
 		int step = 20 - 1;
@@ -50,30 +54,22 @@ public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
 		int currentX = mouseX;
 		int currentY = mouseY;
 		
-		GuiButton currentButton = null;
-		for(GuiButton button : buttonList) {
-			boolean tempEnabled = button.enabled;
-			button.enabled = true;
-			if(button.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
-				button.enabled = tempEnabled;
-				currentButton = button;
+		Gui current = null;
+		for(Wrapper wrapper : buttonList) {
+			if(wrapper.isVisible && wrapper.mouseInside(mouseX, mouseY)) {
+				current = wrapper.obj;
 				break;
 			}
-			button.enabled = tempEnabled;
 		}
 		
 		while(runCondition(currentX, currentY, screenWidth, screenHeight)) {
 			currentX += step * direction.getDX();
 			currentY += step * direction.getDY();
-			for(GuiButton button : buttonList) {
-				if(button == currentButton) continue;
-				boolean tempEnabled = button.enabled;
-				button.enabled = true;
-				if(button.mousePressed(Minecraft.getMinecraft(), currentX, currentY)) {
-					button.enabled = tempEnabled;
-					return button;
+			for(Wrapper wrapper : buttonList) {
+				if(wrapper.obj == current) continue;
+				if(wrapper.isVisible && wrapper.mouseInside(currentX, currentY)) {
+					return wrapper;
 				}
-				button.enabled = tempEnabled;
 			}
 		}
 		return null;
@@ -96,6 +92,32 @@ public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
 		return I18n.format("gui.button.change");
 	}
 	
+	private static List<Wrapper> getMergedElementList(GuiScreen screen) {
+		List<Wrapper> ret = Lists.newArrayList();
+		for(GuiTextField field : reflectiveTextFieldListRetrieve(screen)) {
+			ret.add(new Wrapper(field));
+		}
+		for(GuiButton button : reflectiveButtonListRetrieve(screen)) {
+			ret.add(new Wrapper(button));
+		}
+		return ret;
+	}
+	
+	public static List<GuiTextField> reflectiveTextFieldListRetrieve(GuiScreen screen) {
+		List<GuiTextField> list = Lists.newArrayList();
+		for(Field field : screen.getClass().getDeclaredFields()) {
+			if(GuiTextField.class.isAssignableFrom(field.getType())) {
+				field.setAccessible(true);
+				try {
+					list.add((GuiTextField) field.get(screen));
+				} catch(Exception e) {
+					throw new RuntimeException("Error reflecting on GuiScreen class!", e);
+				}
+			}
+		}
+		return list;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static List<GuiButton> reflectiveButtonListRetrieve(GuiScreen screen) {
 		if(screenButtonListField == null) {
@@ -110,6 +132,35 @@ public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
 			return (List<GuiButton>) screenButtonListField.get(screen);
 		} catch (Exception e) {
 			throw new RuntimeException("Error reflectivly retrieving the buttonList field!", e);
+		}
+	}
+	
+	public static class Wrapper {
+		
+		public int width, height, x, y;
+		public boolean isVisible;
+		public Gui obj;
+		
+		public Wrapper(GuiButton button) {
+			obj = button;
+			this.width = button.width;
+			this.height = button.height;
+			this.x = button.xPosition;
+			this.y = button.yPosition;
+			this.isVisible = button.visible;
+		}
+
+		public Wrapper(GuiTextField field) {
+			obj = field;
+			this.width = field.width;
+			this.height = field.height;
+			this.x = field.xPosition;
+			this.y = field.yPosition;
+			this.isVisible = field.getVisible();
+		}
+		
+		public boolean mouseInside(int currentX, int currentY) {
+			return currentX > x && currentY > y && currentX < x + width && currentY < y + height;
 		}
 	}
 	

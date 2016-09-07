@@ -10,6 +10,7 @@ public class ActionButtonState implements IAction {
 	public ActionButtonState(String name, String desc) {
 		this.state = false;
 		this.name = name;
+		this.desc = desc;
 	}
 	
 	@Override

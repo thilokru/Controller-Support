@@ -22,6 +22,7 @@ public class ActionButtonInvoke extends ActionToEvent<Object> {
 	@Override
 	public String getActionDescription() {
 		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+		if(screen == null)return "<ERROR>";
 		for(GuiButton button : ActionButtonChange.reflectiveButtonListRetrieve(screen)) {
 			if(button.id == buttonID) {
 				return button.displayString;

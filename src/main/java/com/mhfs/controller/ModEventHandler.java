@@ -5,17 +5,16 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.gui.GuiScreenControllerHelp;
-import com.mhfs.controller.gui.GuiTextInput;
 import com.mhfs.controller.gui.LabelButtonInfo;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
 import com.mhfs.controller.mappings.actions.ActionButtonChange;
+import com.mhfs.controller.mappings.actions.ActionButtonChange.Wrapper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -78,14 +77,14 @@ public class ModEventHandler {
 			event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
 		}
 		if(event.getButtonList().size() != 0)
-			ActionButtonChange.moveMouse(event.getButtonList().get(0), event.getGui().width, event.getGui().height);
+			ActionButtonChange.moveMouse(new Wrapper(event.getButtonList().get(0)), event.getGui().width, event.getGui().height);
 	}
 	
 	@SubscribeEvent
 	public void handleButtonPress(GuiScreenEvent.ActionPerformedEvent.Post event) {
 		if(event.getGui() instanceof GuiIngameMenu) {
 			if(event.getButton().id == 200){
-				Minecraft.getMinecraft().displayGuiScreen(new GuiTextInput(event.getGui(), new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, 0, 0, 0, 0))/*new GuiScreenControllerHelp(event.getGui())*/);
+				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenControllerHelp(event.getGui()));
 			}
 		}
 	}
