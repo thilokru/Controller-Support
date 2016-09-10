@@ -1,10 +1,12 @@
 package com.mhfs.controller;
 
+import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.gui.GuiScreenControllerHelp;
+import com.mhfs.controller.gui.GuiTextInput;
 import com.mhfs.controller.gui.LabelButtonInfo;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
@@ -15,8 +17,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -47,6 +51,26 @@ public class ModEventHandler {
 		if(((EntityPlayerSP) event.getEntityLiving()).movementInput instanceof ControllerMovementInput)return;
 		Minecraft.getMinecraft().thePlayer.movementInput = new ControllerMovementInput(Minecraft.getMinecraft().gameSettings);
 		Minecraft.getMinecraft().mouseHelper = new ControllerMouseHelper();
+	}
+	
+	@SubscribeEvent
+	public void handleMouseInput(MouseInputEvent event) {
+		if(event.getGui() instanceof GuiTextInput)return;
+		if(event instanceof MouseInputEvent.Pre) {
+			List<GuiTextField> list = ActionButtonChange.reflectiveTextFieldListRetrieve(event.getGui());
+			for(GuiTextField field : list) {
+				field.setFocused(false);
+			}
+		} else {
+			List<GuiTextField> list = ActionButtonChange.reflectiveTextFieldListRetrieve(event.getGui());
+			for(GuiTextField field : list) {
+				if(field.isFocused()) {
+					Minecraft.getMinecraft().displayGuiScreen(new GuiTextInput(event.getGui(), field));
+					field.setFocused(false);
+					return;
+				}
+			}
+		}
 	}
 
 	@SubscribeEvent

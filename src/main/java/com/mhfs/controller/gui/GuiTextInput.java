@@ -44,7 +44,7 @@ public class GuiTextInput extends GuiScreen{
 	private boolean capital, special, prevDelete, prevSelect, inputPresent;
 	
 	public GuiTextInput(GuiScreen previous, GuiTextField inputTarget) {
-
+		this.previous = previous;
 		this.inputTarget = inputTarget;
 	}
 	
@@ -185,7 +185,7 @@ public class GuiTextInput extends GuiScreen{
 	@Override
 	public void actionPerformed(GuiButton button) {
 		if(button == this.buttonConfirm) {
-			Minecraft.getMinecraft().displayGuiScreen(previous);
+			Minecraft.getMinecraft().currentScreen = previous;
 			inputTarget.setText(textDisplay.getText());
 		}
 	}
