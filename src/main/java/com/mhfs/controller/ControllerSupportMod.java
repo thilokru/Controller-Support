@@ -6,20 +6,9 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 
 import com.mhfs.controller.mappings.ControllerMapping;
-import com.mhfs.controller.mappings.actions.ActionButtonChange;
-import com.mhfs.controller.mappings.actions.ActionButtonState;
-import com.mhfs.controller.mappings.actions.ActionEscape;
-import com.mhfs.controller.mappings.actions.ActionItemSwitch;
-import com.mhfs.controller.mappings.actions.ActionKeyBind;
-import com.mhfs.controller.mappings.actions.ActionLeftClick;
-import com.mhfs.controller.mappings.actions.ActionListSelect;
 import com.mhfs.controller.mappings.actions.ActionRegistry;
-import com.mhfs.controller.mappings.actions.ActionRightClick;
 import com.mhfs.controller.mappings.conditions.GameContext;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -62,21 +51,9 @@ public class ControllerSupportMod {
 			return;
 		}
 		
-		ActionRegistry.registerAction(new ActionLeftClick());
-		ActionRegistry.registerAction(new ActionRightClick());
-		ActionRegistry.registerAction(new ActionEscape());
-		ActionRegistry.registerAction(new ActionButtonChange());
-		ActionRegistry.registerAction(new ActionListSelect());
-		ActionRegistry.registerAction(new ActionButtonState("DELETE_LAST", "gui.input.delete"));
-		ActionRegistry.registerAction(new ActionButtonState("CAPITAL", "gui.input.capital"));
-		ActionRegistry.registerAction(new ActionButtonState("SPECIAL_CHAR", "gui.input.special"));
-		ActionRegistry.registerAction(new ActionButtonState("SELECT_CHAR", "gui.input.select"));
-		ActionKeyBind.registerActions();
-		ActionItemSwitch.register();
+		ActionRegistry.load();
 		
-		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
-		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
-		ControllerMapping mapping = ControllerMapping.loadFromFile(loc, manager);
+		ControllerMapping mapping = ControllerMapping.loadFromConfig();
 		mapping.init(new GameContext(Config.INSTANCE.getController()));
 		Config.INSTANCE.setMapping(mapping);	
 		Config.INSTANCE.save();
@@ -88,10 +65,4 @@ public class ControllerSupportMod {
 		}
 		Controllers.clearEvents();
 	}
-	
-	/*@EventHandler
-	public void deactivate(FMLDeactivationEvent event) {
-		e
-	}*/
-
 }

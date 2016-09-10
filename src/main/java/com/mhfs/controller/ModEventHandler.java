@@ -34,7 +34,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
  */
 public class ModEventHandler {
 	
-	public void detectControllers() {
+	private boolean active = false;
+	
+	public void detectControllers() { //TODO: Better controller detection, dynamic (Handle re- and disconnect) and gui!
 		int count = Controllers.getControllerCount();
 		Logger log = ControllerSupportMod.LOG;
 		log.info(String.format("Found %d controller(s)!", count));
@@ -42,32 +44,45 @@ public class ModEventHandler {
 			Controller controller = Controllers.getController(id);
 			log.info(String.format("Controller: %s", controller.getName()));
 			Config.INSTANCE.setController(controller); //TODO: ask user if he'd likes to use the controller.
+			this.active = true;
 		}
+	}
+	
+	public void activate() {
+		this.active = true;
+	}
+	
+	public void deactivate() {
+		this.active = false;
 	}
 	
 	@SubscribeEvent
 	public void handlePlayerMovementInput(LivingEvent.LivingUpdateEvent event) {
-		if(!(event.getEntityLiving() instanceof EntityPlayerSP))return;
-		if(((EntityPlayerSP) event.getEntityLiving()).movementInput instanceof ControllerMovementInput)return;
-		Minecraft.getMinecraft().thePlayer.movementInput = new ControllerMovementInput(Minecraft.getMinecraft().gameSettings);
-		Minecraft.getMinecraft().mouseHelper = new ControllerMouseHelper();
+		if(active) {
+			if(!(event.getEntityLiving() instanceof EntityPlayerSP))return;
+			if(((EntityPlayerSP) event.getEntityLiving()).movementInput instanceof ControllerMovementInput)return;
+			Minecraft.getMinecraft().thePlayer.movementInput = new ControllerMovementInput(Minecraft.getMinecraft().gameSettings);
+			Minecraft.getMinecraft().mouseHelper = new ControllerMouseHelper();
+		}
 	}
 	
 	@SubscribeEvent
 	public void handleMouseInput(MouseInputEvent event) {
-		if(event.getGui() instanceof GuiTextInput)return;
-		if(event instanceof MouseInputEvent.Pre) {
-			List<GuiTextField> list = ActionButtonChange.reflectiveTextFieldListRetrieve(event.getGui());
-			for(GuiTextField field : list) {
-				field.setFocused(false);
-			}
-		} else {
-			List<GuiTextField> list = ActionButtonChange.reflectiveTextFieldListRetrieve(event.getGui());
-			for(GuiTextField field : list) {
-				if(field.isFocused()) {
-					Minecraft.getMinecraft().displayGuiScreen(new GuiTextInput(event.getGui(), field));
+		if(active) {
+			if(event.getGui() instanceof GuiTextInput)return;
+			if(event instanceof MouseInputEvent.Pre) {
+				List<GuiTextField> list = ActionButtonChange.reflectiveTextFieldListRetrieve(event.getGui());
+				for(GuiTextField field : list) {
 					field.setFocused(false);
-					return;
+				}
+			} else {
+				List<GuiTextField> list = ActionButtonChange.reflectiveTextFieldListRetrieve(event.getGui());
+				for(GuiTextField field : list) {
+					if(field.isFocused()) {
+						Minecraft.getMinecraft().displayGuiScreen(new GuiTextInput(event.getGui(), field));
+						field.setFocused(false);
+						return;
+					}
 				}
 			}
 		}
@@ -82,33 +97,38 @@ public class ModEventHandler {
 	public void handleClientTickEnd(ClientTickEvent event) {
 		if(event.phase == Phase.START){
 			handleTick();
-		}
+		}	
 	}
 	
 	public void handleTick() {
-		Config cfg = Config.INSTANCE;
-		if(!(cfg.hasController()))return;
-		Controller controller = cfg.getController();
-		controller.poll();
-		cfg.getMapping().apply();
-		Controllers.clearEvents();
+		if(active) {
+			Config cfg = Config.INSTANCE;
+			Controller controller = cfg.getController();
+			controller.poll();
+			cfg.getMapping().apply();
+			Controllers.clearEvents();
+		}
 	}
 	
 	@SubscribeEvent
 	public void screenHandler(GuiScreenEvent.InitGuiEvent.Post event) {
-		LabelButtonInfo.inject(event.getGui());
-		if(event.getGui() instanceof GuiIngameMenu) {
-			event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
+		if(active) {
+			LabelButtonInfo.inject(event.getGui());
+			if(event.getGui() instanceof GuiIngameMenu) {
+				event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
+			}
+			if(event.getButtonList().size() != 0)
+				ActionButtonChange.moveMouse(new Wrapper(event.getButtonList().get(0)), event.getGui().width, event.getGui().height);
 		}
-		if(event.getButtonList().size() != 0)
-			ActionButtonChange.moveMouse(new Wrapper(event.getButtonList().get(0)), event.getGui().width, event.getGui().height);
 	}
 	
 	@SubscribeEvent
 	public void handleButtonPress(GuiScreenEvent.ActionPerformedEvent.Post event) {
-		if(event.getGui() instanceof GuiIngameMenu) {
-			if(event.getButton().id == 200){
-				Minecraft.getMinecraft().displayGuiScreen(new GuiScreenControllerHelp(event.getGui()));
+		if(active) {
+			if(event.getGui() instanceof GuiIngameMenu) {
+				if(event.getButton().id == 200){
+					Minecraft.getMinecraft().displayGuiScreen(new GuiScreenControllerHelp(event.getGui()));
+				}
 			}
 		}
 	}

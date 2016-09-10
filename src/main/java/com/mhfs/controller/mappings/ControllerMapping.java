@@ -21,6 +21,8 @@ import com.mhfs.controller.mappings.actions.IParametrizedAction;
 import com.mhfs.controller.mappings.conditions.GameContext;
 import com.mhfs.controller.mappings.conditions.ICondition;
 import com.mhfs.controller.mappings.controlls.IControll;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
@@ -44,6 +46,9 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	}
 	
 	public void apply() {
+		if(context == null) {
+			throw new RuntimeException("ControllerMapping hasn't been initialized yet! (Hint: Call init() with a GameContext Object)");
+		}
 		if(context.update()) {
 			Map<IControll<?>, IAction> oldButtonMap = currentButtonMap;
 			currentStickMap = select(stickMap, context);
@@ -137,6 +142,12 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 			ControllerSupportMod.LOG.error("Exception while loading mapping!", e);
 		}
 		return null;
+	}
+	
+	public static ControllerMapping loadFromConfig() {
+		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
+		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+		return loadFromFile(loc, manager);
 	}
 
 	public List<Pair<String, String>> getButtonFunctions() {
