@@ -88,7 +88,20 @@ public abstract class GuiSelectElement<T> extends Gui {
 		
 		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		
-		int fX = (int) (centerX + (Math.sin(startAngle) * innerDistance + Math.sin(startAngle) * outerDistance + Math.sin(stopAngle) * outerDistance + Math.sin(stopAngle) * innerDistance) / 4 - fr.getStringWidth(element.getDisplayString()) / 2);
+		int fX = (int) (centerX + (Math.sin(startAngle) * innerDistance + Math.sin(startAngle) * outerDistance + Math.sin(stopAngle) * outerDistance + Math.sin(stopAngle) * innerDistance) / 4 );
+		
+		if(element.getDisplayString().length() > 2) {
+			boolean left = fX < centerX;
+			boolean centered = Math.abs(centerX - fX) < innerRadius / segmentCount;
+			if(centered) {
+				fX -= fr.getStringWidth(element.getDisplayString()) / 2;
+			}else if(left) {
+				fX -= fr.getStringWidth(element.getDisplayString());
+			}
+		} else {
+			fX -= fr.getStringWidth(element.getDisplayString()) / 2;
+		}
+		
 		int fY = (int) (centerY - (Math.cos(startAngle) * innerDistance + Math.cos(startAngle) * outerDistance + Math.cos(stopAngle) * outerDistance + Math.cos(stopAngle) * innerDistance) / 4 - fr.FONT_HEIGHT / 2);
 		fr.drawString(element.getDisplayString(), fX, fY, 0xFFFFFF);
 	}

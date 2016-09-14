@@ -125,7 +125,7 @@ public class ModEventHandler {
 				event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
 			}
 			if(event.getGui() instanceof GuiMainMenu) {
-				this.selector = new GuiButtonSelector(event.getGui().width / 2, event.getGui().height / 2 + 30, 65, event.getButtonList().toArray(new GuiButton[0]));
+				this.selector = new GuiButtonSelector(event.getGui().width / 2, event.getGui().height / 2 + 30, 40, event.getButtonList().toArray(new GuiButton[0]));
 				event.getButtonList().clear();
 			}
 			if(event.getButtonList().size() != 0)
