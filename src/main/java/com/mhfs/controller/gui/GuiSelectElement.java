@@ -20,12 +20,24 @@ public abstract class GuiSelectElement<T> extends Gui {
 	
 	private Pair<Float, Float> selectionInput;
 	private int middleX, middleY;
+	private int innerRadius, outerRadius, outerSelectedRadius;
 	
 	public GuiSelectElement(int middleX, int middleY) {
-		this.middleX = middleX;
-		this.middleY = middleY;
+		this(middleX, middleY, 40);
 	}
 	
+	public GuiSelectElement(int middleX, int middleY, int innerRadius, int outerRadius, int outerRadiusSelected) {
+		this.middleX = middleX;
+		this.middleY = middleY;
+		this.innerRadius = innerRadius;
+		this.outerRadius = outerRadius;
+		this.outerSelectedRadius = outerRadiusSelected;
+	}
+	
+	public GuiSelectElement(int middleX, int middleY, int innerRadius) {
+		this(middleX, middleY, innerRadius, innerRadius + 15, innerRadius + 30);
+	}
+
 	public void draw() {
 		ISelectableElement<T>[] elements = getElements();
 		ISelectableElement<T> currentActive = getSelectedElement();
@@ -46,8 +58,8 @@ public abstract class GuiSelectElement<T> extends Gui {
 	}
 	
 	private void drawSegment(int centerX, int centerY, int segmentCount, int segmentID, ISelectableElement<T> element, boolean active) {
-		int innerDistance = 40;
-		int outerDistance = active ? 70 : 55;
+		int innerDistance = innerRadius;
+		int outerDistance = active ? outerSelectedRadius : outerRadius;
 		double startAngle = ((float)segmentID / segmentCount) * 2 * Math.PI;
 		double stopAngle = ((float)(segmentID + 1) / segmentCount) * 2 * Math.PI;
 		

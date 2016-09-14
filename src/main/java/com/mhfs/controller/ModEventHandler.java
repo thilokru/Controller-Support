@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
+import com.mhfs.controller.gui.GuiButtonSelector;
 import com.mhfs.controller.gui.GuiScreenControllerHelp;
 import com.mhfs.controller.gui.GuiTextInput;
 import com.mhfs.controller.gui.LabelButtonInfo;
@@ -17,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -35,6 +37,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class ModEventHandler {
 	
 	private boolean active = false;
+	private GuiButtonSelector selector;
 	
 	public void detectControllers() { //TODO: Better controller detection, dynamic (Handle re- and disconnect) and gui!
 		int count = Controllers.getControllerCount();
@@ -91,6 +94,10 @@ public class ModEventHandler {
 	@SubscribeEvent
 	public void handleGuiScreenEvent(GuiScreenEvent.DrawScreenEvent event) {
 		handleTick();
+		if(event.getGui() instanceof GuiMainMenu) {
+			selector.handleInput();
+			selector.draw();
+		}
 	}
 	
 	@SubscribeEvent
@@ -116,6 +123,10 @@ public class ModEventHandler {
 			LabelButtonInfo.inject(event.getGui());
 			if(event.getGui() instanceof GuiIngameMenu) {
 				event.getButtonList().add(new GuiButton(200, (event.getGui().width / 2) - 100, event.getGui().height - 20, I18n.format("gui.controller")));
+			}
+			if(event.getGui() instanceof GuiMainMenu) {
+				this.selector = new GuiButtonSelector(event.getGui().width / 2, event.getGui().height / 2 + 30, 65, event.getButtonList().toArray(new GuiButton[0]));
+				event.getButtonList().clear();
 			}
 			if(event.getButtonList().size() != 0)
 				ActionButtonChange.moveMouse(new Wrapper(event.getButtonList().get(0)), event.getGui().width, event.getGui().height);

@@ -16,7 +16,7 @@ public class ActionRegistry {
 		ActionRegistry.registerAction(new ActionButtonState("DELETE_LAST", "gui.input.delete"));
 		ActionRegistry.registerAction(new ActionButtonState("CAPITAL", "gui.input.capital"));
 		ActionRegistry.registerAction(new ActionButtonState("SPECIAL_CHAR", "gui.input.special"));
-		ActionRegistry.registerAction(new ActionButtonState("SELECT_CHAR", "gui.input.select"));
+		ActionRegistry.registerAction(new ActionButtonState("SELECT", "gui.input.select"));
 		ActionKeyBind.registerActions();
 		ActionItemSwitch.register();
 	}

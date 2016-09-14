@@ -66,7 +66,7 @@ public class GuiTextInput extends GuiScreen{
 		}
 		prevDelete = currentDelete;
 		
-		boolean currentSelect = ((ActionButtonState)ActionRegistry.getAction("SELECT_CHAR")).getState();
+		boolean currentSelect = ((ActionButtonState)ActionRegistry.getAction("SELECT")).getState();
 		if(currentSelect && !prevSelect) {
 			char selectedChar = selector.getSelectedElement().getResult();
 			textDisplay.textboxKeyTyped(selectedChar, 0);

@@ -8,6 +8,7 @@ usage.mouse=Mouse
 usage.view=View
 gui.controller=Controller Controlls
 gui.button.change=Select Button
+gui.button.language=Language
 gui.list.select=Select Entry
 gui.input.delete=Delete
 gui.input.capital=Upper Case
