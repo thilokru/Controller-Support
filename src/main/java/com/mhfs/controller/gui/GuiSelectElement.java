@@ -49,7 +49,7 @@ public abstract class GuiSelectElement<T> extends Gui {
 	public void handleInput() {
 		Controller controller = Config.INSTANCE.getController();
 		ControllerMapping mapping = Config.INSTANCE.getMapping();
-		StickConfig input = mapping.getStick(Usage.TEXT);
+		StickConfig input = mapping.getStick(Usage.WHEEL);
 		if(input != null) {
 			this.selectionInput = input.getData(controller);
 		} else {

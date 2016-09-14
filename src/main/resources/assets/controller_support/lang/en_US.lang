@@ -6,6 +6,7 @@ action.nextItem=Next Item
 usage.movement=Move
 usage.mouse=Mouse
 usage.view=View
+usage.wheel=Selection Wheel
 gui.controller=Controller Controlls
 gui.button.change=Select Button
 gui.button.language=Language

@@ -6,7 +6,7 @@ public enum Usage{
 	MOVEMENT("usage.movement"),
 	VIEW("usage.view"),
 	MOUSE("usage.mouse"),
-	TEXT("usage.text");
+	WHEEL("usage.wheel");
 	
 	private String translateKey;
 	
