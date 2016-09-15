@@ -48,6 +48,5 @@ public class GameContext {
 		gc.currentScreen = null;
 		gc.ingame = true;
 		return gc;
-		
 	}
 }
