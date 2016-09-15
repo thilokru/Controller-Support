@@ -1,5 +1,8 @@
 package com.mhfs.controller.mappings.conditions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConditionSerializationHelper {
 
 	public static String toString(ICondition value) {
@@ -25,8 +28,33 @@ public class ConditionSerializationHelper {
 			return new ScreenCondition(args);
 		case "ingame":
 			return new IngameCondition();
+		case "options":
+			return new OptionsCondition();
 		default:
 			throw new RuntimeException(String.format("Unknown condition type %s", op));
 		}
-	}	
+	}
+	
+	public static String[] parantheticalLeveledStringSplit(final String arg) {
+		int openParan = 0;
+		int firstValid = 0;
+		List<String> segments = new ArrayList<String>();
+		for(int index = 0; index < arg.length(); index ++) {
+			char c = arg.charAt(index);
+			if(c == '(') {
+				openParan++;
+			} else if(c == ')') {
+				openParan--;
+			} else if(c == ',') {
+				if(openParan == 0) {
+					segments.add(arg.substring(firstValid, index));
+					firstValid = index + 1;
+				}
+			}
+		}
+		if(firstValid < arg.length()) {
+			segments.add(arg.substring(firstValid, arg.length()));
+		}
+		return segments.toArray(new String[0]);
+	}
 }

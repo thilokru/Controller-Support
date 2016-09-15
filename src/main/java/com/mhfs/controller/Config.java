@@ -13,6 +13,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Config extends Configuration{
 	
 	public static Config INSTANCE;
+	private final static String[] DEFAULT_OPTION_CLASSES = new String[]{
+			"net\\.minecraft\\.client\\.gui\\.((.*Options.*)|(.*Settings.*)|(.*Customize.*)|GuiControls|GuiLanguage|GuiScreenResourcePacks)",
+			"net.minecraftforge.fml.client.GuiModList",
+			"net.minecraftforge.fml.client.config.GuiConfig",
+			"net.minecraftforge.fml.client.config.GuiEditArray",
+			"net.minecraftforge.fml.client.config.GuiSelectString"
+		};
 	
 	private float analogSensitivity = 0.5F;
 	private boolean invertedLookAxes;
@@ -20,6 +27,7 @@ public class Config extends Configuration{
 	private Controller controller;
 	private ResourceLocation buttonNameMap;
 	private ResourceLocation mappingLocation;
+	private String[] optionClasses;
 	
 	public Config(FMLPreInitializationEvent event) {
 		super(event.getSuggestedConfigurationFile());
@@ -30,6 +38,7 @@ public class Config extends Configuration{
 	@SubscribeEvent
 	public void handleConfigChange(ConfigChangedEvent event) {
 		this.save();
+		this.load();
 	}
 	
 	public void load(){
@@ -37,6 +46,7 @@ public class Config extends Configuration{
 		this.analogSensitivity = this.getFloat("analogSensitivity", CATEGORY_GENERAL, 0.5F, 0F, 1.0F, "The sensitivity of the analog sticks");
 		this.invertedLookAxes = this.getBoolean("invertedAxes", CATEGORY_GENERAL, false, "Whether the view axes are inverted");
 		this.mappingLocation = new ResourceLocation(this.getString("mappingLocation", CATEGORY_GENERAL, "controller_support:maps/mapping.cfg", "From where to load the buttons config."));
+		this.optionClasses = this.getStringList("optionClasses", CATEGORY_GENERAL, DEFAULT_OPTION_CLASSES, "The classes that trigger the OPTIONS()-condition. Has regex-support.");
 	}
 	
 	public float getStickSensitivity() {
@@ -81,7 +91,7 @@ public class Config extends Configuration{
 		this.buttonNameMap = loc;
 	}
 	
-	public ResourceLocation getButtonNameMapLocation(){
+	public ResourceLocation getButtonNameMapLocation() {
 		return this.buttonNameMap;
 	}
 
@@ -92,6 +102,10 @@ public class Config extends Configuration{
 	public void setActionMappingLocation(ResourceLocation mappingLocation) {
 		this.mappingLocation = mappingLocation;
 		this.get(CATEGORY_GENERAL, "mappingLocation", "controller_support:maps/mapping.cfg").set(mappingLocation.toString());
+	}
+	
+	public String[] getOptionsClasses() {
+		return this.optionClasses;
 	}
 
 }

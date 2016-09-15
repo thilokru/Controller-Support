@@ -9,7 +9,7 @@ public class OrCondition implements ICondition{
 	}
 	
 	public OrCondition(String args) {
-		String[] subConditions = StringSplitHelper.parantheticalLeveledStringSplit(args);
+		String[] subConditions = ConditionSerializationHelper.parantheticalLeveledStringSplit(args);
 		this.conditions = new ICondition[subConditions.length];
 		for(int i = 0; i < subConditions.length; i++) {
 			String subCon = subConditions[i].trim();
