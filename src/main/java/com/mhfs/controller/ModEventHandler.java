@@ -1,7 +1,6 @@
 package com.mhfs.controller;
 
 import java.util.List;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 
@@ -39,18 +38,6 @@ public class ModEventHandler {
 	private boolean active = false;
 	private GuiButtonSelector selector;
 	
-	public void detectControllers() { //TODO: Better controller detection, dynamic (Handle re- and disconnect) and gui!
-		int count = Controllers.getControllerCount();
-		Logger log = ControllerSupportMod.LOG;
-		log.info(String.format("Found %d controller(s)!", count));
-		for(int id = 0; id < count; id++) {
-			Controller controller = Controllers.getController(id);
-			log.info(String.format("Controller: %s", controller.getName()));
-			Config.INSTANCE.setController(controller); //TODO: ask user if he'd likes to use the controller.
-			this.active = true;
-		}
-	}
-	
 	public void activate() {
 		this.active = true;
 	}
@@ -60,7 +47,7 @@ public class ModEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void handlePlayerMovementInput(LivingEvent.LivingUpdateEvent event) {
+	public void onPlayerLivingUpdate(LivingEvent.LivingUpdateEvent event) {
 		if(active) {
 			if(!(event.getEntityLiving() instanceof EntityPlayerSP))return;
 			if(((EntityPlayerSP) event.getEntityLiving()).movementInput instanceof ControllerMovementInput)return;
@@ -70,7 +57,7 @@ public class ModEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void handleMouseInput(MouseInputEvent event) {
+	public void onMouseInput(MouseInputEvent event) {
 		if(active) {
 			if(event.getGui() instanceof GuiTextInput)return;
 			if(event instanceof MouseInputEvent.Pre) {
@@ -92,7 +79,7 @@ public class ModEventHandler {
 	}
 
 	@SubscribeEvent
-	public void handleGuiScreenEvent(GuiScreenEvent.DrawScreenEvent event) {
+	public void onDrawGuiScreen(GuiScreenEvent.DrawScreenEvent event) {
 		handleTick();
 		if(event.getGui() instanceof GuiMainMenu) {
 			selector.handleInput();
@@ -118,7 +105,7 @@ public class ModEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void screenHandler(GuiScreenEvent.InitGuiEvent.Post event) {
+	public void onInitGuiScreen(GuiScreenEvent.InitGuiEvent.Post event) {
 		if(active) {
 			LabelButtonInfo.inject(event.getGui());
 			if(event.getGui() instanceof GuiIngameMenu) {
@@ -134,7 +121,7 @@ public class ModEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void handleButtonPress(GuiScreenEvent.ActionPerformedEvent.Post event) {
+	public void onGuiScreenButtonPress(GuiScreenEvent.ActionPerformedEvent.Post event) {
 		if(active) {
 			if(event.getGui() instanceof GuiIngameMenu) {
 				if(event.getButton().id == 200){
