@@ -2,6 +2,8 @@ package com.mhfs.controller.mappings.conditions;
 
 import org.lwjgl.input.Controller;
 
+import com.mhfs.controller.Config;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -9,11 +11,6 @@ public class GameContext {
 
 	private boolean ingame;
 	private GuiScreen currentScreen;
-	private Controller controller;
-	
-	public GameContext(Controller controller) {
-		this.controller = controller;
-	}
 	
 	public boolean update() {
 		boolean tmpIngame = Minecraft.getMinecraft().inGameHasFocus;
@@ -40,11 +37,11 @@ public class GameContext {
 	}
 	
 	public Controller getController() {
-		return controller;
+		return Config.INSTANCE.getController();
 	}
 	
-	public static GameContext getIngameContext(Controller controller) {
-		GameContext gc = new GameContext(controller);
+	public static GameContext getIngameContext() {
+		GameContext gc = new GameContext();
 		gc.currentScreen = null;
 		gc.ingame = true;
 		return gc;

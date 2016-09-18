@@ -30,6 +30,7 @@ import net.minecraft.util.ResourceLocation;
 public class ControllerMapping implements IResourceManagerReloadListener{
 	
 	private final static Gson gson = GsonHelper.getExposedGson();
+	private final static GameContext context = new GameContext();
 	
 	@Expose
 	private Map<ICondition, Map<IControll<?>, IAction>> buttonMap;
@@ -37,13 +38,8 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	private Map<ICondition, Map<Usage, StickConfig>> stickMap;
 	
 	private volatile ResourceLocation location;
-	private volatile GameContext context;
 	private volatile Map<Usage, StickConfig> currentStickMap;
 	private volatile Map<IControll<?>, IAction> currentButtonMap;
-	
-	public void init(GameContext context) {
-		this.context = context;
-	}
 	
 	public void apply() {
 		if(context == null) {
@@ -90,7 +86,7 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	
 	@SuppressWarnings("unchecked")
 	private <T> void handleControll(IControll<T> controll, IAction action) {
-		if(controll.check(this.context)) {
+		if(controll.check(ControllerMapping.context)) {
 			if(controll.hasAdditionalData()){
 				if(action instanceof IParametrizedAction<?>) {
 					try {
@@ -167,7 +163,7 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	}
 
 	public List<Pair<String, String>> getIngameButtonFunctions() {
-		GameContext ingame = GameContext.getIngameContext(this.context.getController());
+		GameContext ingame = GameContext.getIngameContext();
 		return getButtonFunctions0(select(buttonMap, ingame), select(stickMap, ingame));
 	}
 

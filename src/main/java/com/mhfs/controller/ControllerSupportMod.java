@@ -2,6 +2,8 @@ package com.mhfs.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.mhfs.controller.hotplug.HotplugHandler;
 import com.mhfs.controller.mappings.actions.ActionRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -24,11 +26,13 @@ public class ControllerSupportMod {
 	
 	public ControllerSupportMod() {
 		this.handler = new ModEventHandler();
+		handler.deactivate();
 	}
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Config.INSTANCE = new Config(event);
+		HotplugHandler.preInit();
 	}
 	
 	@EventHandler

@@ -10,6 +10,7 @@ import com.mhfs.controller.gui.GuiTextInput;
 import com.mhfs.controller.gui.LabelButtonInfo;
 import com.mhfs.controller.hooks.ControllerMouseHelper;
 import com.mhfs.controller.hooks.ControllerMovementInput;
+import com.mhfs.controller.hotplug.HotplugHandler;
 import com.mhfs.controller.mappings.actions.ActionButtonChange;
 import com.mhfs.controller.mappings.actions.ActionButtonChange.Wrapper;
 
@@ -82,8 +83,11 @@ public class ModEventHandler {
 	public void onDrawGuiScreen(GuiScreenEvent.DrawScreenEvent event) {
 		handleTick();
 		if(event.getGui() instanceof GuiMainMenu) {
-			selector.handleInput();
-			selector.draw();
+			if(HotplugHandler.init())return;
+			if(active) {
+				selector.handleInput();
+				selector.draw();
+			}
 		}
 	}
 	
@@ -101,6 +105,7 @@ public class ModEventHandler {
 			controller.poll();
 			cfg.getMapping().apply();
 			Controllers.clearEvents();
+			HotplugHandler.checkControllerRemoved(controller);
 		}
 	}
 	
