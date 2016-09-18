@@ -1,3 +1,12 @@
+This Mod allows you to use your Controller on the PC in Minecraft.
+
+Features:
+ - Support for XBOX 360 Controller
+ - Flexibility to make adding new controller types (like PS4 controller) easy
+ - Flexible mappings, to assign button and stick usage based on conditions like current gui
+
+
+This is the original README.txt as provided by MC Forge:
 -------------------------------------------
 Source installation information for modders
 -------------------------------------------
