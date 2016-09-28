@@ -3,6 +3,9 @@ package com.mhfs.controller.daemon;
 import java.net.InetSocketAddress;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mhfs.ipc.Method;
+import com.mhfs.ipc.MethodTypeAdapter;
 import com.mhfs.ipc.executor.IPCMethodProvider;
 import com.mhfs.ipc.executor.IProviderSendHandler;
 
@@ -17,6 +20,7 @@ import static com.mhfs.controller.daemon.SerializationHelper.*;
 
 public class NetworkHandler extends SimpleChannelInboundHandler<DatagramPacket> implements IProviderSendHandler {
 
+	private static Gson gson = new GsonBuilder().registerTypeHierarchyAdapter(Method.class, new MethodTypeAdapter()).create();
 	private IPCMethodProvider provider;
 	private Channel channel;
 	private InetSocketAddress sender;
@@ -34,7 +38,7 @@ public class NetworkHandler extends SimpleChannelInboundHandler<DatagramPacket> 
 		Object[] args = new Object[argCount];
 		for(int i = 0; i < argCount; i++) {
 			Class<?> clazz = Class.forName(readString(content));
-			args[i] = new Gson().fromJson(readString(content), clazz);
+			args[i] = gson.fromJson(readString(content), clazz);
 		}
 
 		provider.invoke(methodID, invID, args);
@@ -45,8 +49,14 @@ public class NetworkHandler extends SimpleChannelInboundHandler<DatagramPacket> 
 		ByteBuf buf = Unpooled.buffer();
 		buf.writeInt(invocationID);
 		writeString(buf, result.getClass().getCanonicalName());
-		String json = new Gson().toJson(result);
-		writeString(buf, json);
+		if(result instanceof ByteBuf) {
+			ByteBuf res = (ByteBuf) result;
+			buf.writeInt(res.readableBytes());
+			buf.writeBytes(res);
+		} else {
+			String json = gson.toJson(result);
+			writeString(buf, json);
+		}
 		
 		DatagramPacket msg = new DatagramPacket(buf, sender);
 		channel.writeAndFlush(msg);
@@ -55,5 +65,10 @@ public class NetworkHandler extends SimpleChannelInboundHandler<DatagramPacket> 
 	public void setProvider(IPCMethodProvider provider) {
 		this.provider = provider;
 	}
-
+	
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		System.err.println("Daemon Network Error:");
+		cause.printStackTrace();
+	}
 }

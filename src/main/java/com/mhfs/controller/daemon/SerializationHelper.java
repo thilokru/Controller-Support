@@ -86,8 +86,8 @@ public class SerializationHelper {
 			buf.writeFloat(controller.getDeadZone(i));
 		}
 		
-		buf.writeInt(controller.getRumblerCount()); //Axes
-		for(int i = 0; i < controller.getAxisCount(); i++) {
+		buf.writeInt(controller.getRumblerCount()); //Rumblers
+		for(int i = 0; i < controller.getRumblerCount(); i++) {
 			writeString(buf, controller.getRumblerName(i));
 		}
 		
@@ -122,8 +122,8 @@ public class SerializationHelper {
 	}
 
 	private static int getFieldValue(Controller controller, String name) throws ClassNotFoundException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Class<?> targetClazz = Class.forName("org.lwjgl.input.JInputController");
-		Field field = targetClazz.getField(name);
+		Class<?> targetClazz = controller.getClass();
+		Field field = targetClazz.getDeclaredField(name);
 		field.setAccessible(true);
 		return field.getInt(controller);
 	}

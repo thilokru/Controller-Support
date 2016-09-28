@@ -14,6 +14,10 @@ public class BeanController implements Controller {
 	int[] specialID;
 	
 	ProvidedMethods methodProvider;
+	
+	public BeanController(ProvidedMethods methods) {
+		this.methodProvider = methods;
+	}
 
 	@Override
 	public String getName() {

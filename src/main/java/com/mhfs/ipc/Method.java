@@ -16,6 +16,16 @@ public class Method<T> {
 		this.args = argClazzes;
 	}
 	
+	Method(int id, String name, Class<T> returnValue, Class<?>[] argClazzes) {
+		this.methodID = id;
+		if(currentID < id) {
+			currentID = ++id;
+		}
+		this.name = name;
+		this.returnClazz = returnValue;
+		this.args = argClazzes;
+	}
+	
 	public String getName() {
 		return name;
 	}

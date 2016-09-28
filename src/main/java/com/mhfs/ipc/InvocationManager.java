@@ -12,11 +12,14 @@ public class InvocationManager {
 	
 	private List<Method<?>> methods;
 	
-	public InvocationManager(ISendHandler sendHandler) throws Exception {
+	public InvocationManager(ISendHandler sendHandler) {
 		this.sendHandler = sendHandler;
 		this.invocations = new LinkedList<CallFuture<?>>();
-		
+	}
+	
+	public void init() throws Exception {
 		CallFuture<Method<?>[]> future = CallFuture.getExchangeFuture();
+		invocations.add(future);
 		sendHandler.sendInvocationData(0, future.getID(), new Object[0]);
 		future.syncUninteruptable();
 		methods = new ArrayList<Method<?>>();
@@ -63,6 +66,9 @@ public class InvocationManager {
 
 	private void preInvocationChecks(Method<?> method, Object[] args) {
 		Class<?>[] validArgs = method.getArgClasses();
+		if(validArgs == null) {
+			throw new NullPointerException(String.format("Method '%s' has a NULL arg class list!", method.getName()));
+		}
 		if(validArgs.length != args.length) {
 			throw new IllegalArgumentException(String.format("Method '%s' accepts %d arguments, but got %d!", method.getName(), validArgs.length, args.length));
 		}

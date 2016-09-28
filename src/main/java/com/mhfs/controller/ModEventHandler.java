@@ -2,8 +2,6 @@ package com.mhfs.controller;
 
 import java.util.List;
 import org.lwjgl.input.Controller;
-import org.lwjgl.input.Controllers;
-
 import com.mhfs.controller.gui.GuiButtonSelector;
 import com.mhfs.controller.gui.GuiScreenControllerHelp;
 import com.mhfs.controller.gui.GuiTextInput;
@@ -104,8 +102,7 @@ public class ModEventHandler {
 			Controller controller = cfg.getController();
 			controller.poll();
 			cfg.getMapping().apply();
-			Controllers.clearEvents();
-			HotplugHandler.checkControllerRemoved(controller);
+			HotplugHandler.checkControllerRemoved();
 		}
 	}
 	

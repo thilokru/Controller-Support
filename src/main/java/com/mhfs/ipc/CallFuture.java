@@ -22,9 +22,10 @@ public class CallFuture<T> {
 
 	@SuppressWarnings("unchecked")
 	void onReturn(Object result) {
-		this.finished = true;
-		this.result = Optional.ofNullable((T)result);
-		this.notify();
+		synchronized(this) {
+			this.result = Optional.ofNullable((T)result);
+			this.finished = true;
+		}
 	}
 	
 	int getID() {
@@ -49,7 +50,7 @@ public class CallFuture<T> {
 	
 	public CallFuture<T> sync() throws InterruptedException {
 		while(!finished) {
-			this.wait();
+			Thread.sleep(0);
 		}
 		return this;
 	}

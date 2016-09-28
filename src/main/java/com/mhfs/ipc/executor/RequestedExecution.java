@@ -11,6 +11,7 @@ public class RequestedExecution<T> implements Runnable{
 	public RequestedExecution(int invID, Callable<T> task, IProviderSendHandler sendHandler) {
 		this.invocationID = invID;
 		this.task = task;
+		this.sendHandler = sendHandler;
 	}
 	
 	@Override

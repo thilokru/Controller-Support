@@ -20,24 +20,27 @@ public class IPCMethodProvider {
 		}
 		
 		providableMethods = new ArrayList<Method<?>>();
+		this.implementor = implementor;
 		this.sender = sender;
+		
 		providableMethods.add(Method.of("getMethods", Method[].class));
 		for(java.lang.reflect.Method method : wrappable.getDeclaredMethods()) {
 			providableMethods.add(Method.of(method));
 		}
 	}
 	
-	public Object invoke(int methodID, int invocationID, Object[] args) {
+	public void invoke(int methodID, int invocationID, Object[] args) {
 		try {
-			return invoke0(methodID, invocationID, args);
+			invoke0(methodID, invocationID, args);
 		} catch (Throwable t) {
 			throw new RuntimeException("Error invoking method!", t);
 		}
 	}
 	
-	private Object invoke0(int methodID, int invocationID, Object[] arguments) throws NoSuchMethodException, SecurityException {
+	private void invoke0(int methodID, int invocationID, Object[] arguments) throws NoSuchMethodException, SecurityException {
 		if(methodID == 0) {
 			sender.sendInvocationResult(invocationID, getWrappedMethods().toArray(new Method[0]));
+			return;
 		}
 		for(Method<?> method : providableMethods) {
 			if(method.getCallID() == methodID) {
@@ -46,6 +49,7 @@ public class IPCMethodProvider {
 				t.setDaemon(true);
 				t.setName("IPC Method Executor");
 				t.start();
+				return;
 			}
 		}
 		throw new RuntimeException("The requested method couldn't be found!");

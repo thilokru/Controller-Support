@@ -2,6 +2,7 @@ package com.mhfs.controller.daemon;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.BindException;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
@@ -28,9 +29,9 @@ public class DaemonMain implements ProvidedMethods{
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Starting IPC-Server");
-		int port = Integer.parseInt(args[0]);
 		
+		int port = Integer.parseInt(args[0]);
+		System.out.println("Starting IPC-Server, Port: " + port);
 		handler = new NetworkHandler();
 		IPCMethodProvider provider = new IPCMethodProvider(ProvidedMethods.class, new DaemonMain(), handler);
 		handler.setProvider(provider);
@@ -41,24 +42,29 @@ public class DaemonMain implements ProvidedMethods{
 		b.group(eventGroup);
 		b.channel(NioDatagramChannel.class);
 		b.handler(handler);
-		ChannelFuture future = b.bind(port).syncUninterruptibly();
+		System.out.println("About to start bootstrap...");
+		ChannelFuture future = b.bind("localhost", port).syncUninterruptibly();
 		
-		Thread t = new Thread(() -> {
-			future.channel().closeFuture().syncUninterruptibly();
+		if(future.cause() instanceof BindException) {
+			future.channel().close().syncUninterruptibly();
 			b.group().shutdownGracefully();
-		});
-		t.setDaemon(true);
-		t.setName("Netty-IPC Shutdown Waiter");
-		
+			Controllers.destroy();
+		}
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			future.channel().close();
 			Controllers.destroy();
 		}));
+		
+		future.channel().closeFuture().syncUninterruptibly();
+		b.group().shutdownGracefully();
 	}
 
 	@Override
 	public ByteBuf getControllerData() {
-		return SerializationHelper.serializeControllerData(selectedController);
+		Controllers.poll();
+		ByteBuf buf = SerializationHelper.serializeControllerData(selectedController);
+		Controllers.clearEvents();
+		return buf;
 	}
 
 	@Override
@@ -73,16 +79,19 @@ public class DaemonMain implements ProvidedMethods{
 	}
 
 	@Override
-	public void awaitControllerSelection() {
+	public boolean awaitControllerSelection() {
 		Controllers.clearEvents();
 		while(!controllerSelected) {
+			Controllers.poll();
 			if(Controllers.next()) {
 				if(Controllers.isEventButton()) {
 					controllerSelected = true;
 					selectedController = Controllers.getEventSource();
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	@Override

@@ -3,9 +3,9 @@ package com.mhfs.controller.gui;
 import java.awt.Color;
 import java.io.IOException;
 
-import org.lwjgl.input.Controllers;
-
+import com.mhfs.controller.daemon.BeanController;
 import com.mhfs.controller.hotplug.HotplugHandler;
+import com.mhfs.ipc.CallFuture;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -18,17 +18,18 @@ public class GuiControllerSelection extends GuiScreen {
 
 	public static void requestController() {
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiControllerSelection)return;
-		if(Controllers.getControllerCount() == 0)return;
+		if(!HotplugHandler.getIPCHandler().hasControllers())return;
 		GuiControllerSelection gui = new GuiControllerSelection(Minecraft.getMinecraft().currentScreen);
-		Controllers.clearEvents();
 		Minecraft.getMinecraft().displayGuiScreen(gui);
 	}
 	
 	private GuiScreen previous;
 	private GuiButton useMouse;
+	private CallFuture<Boolean> controllerSelection;
 	
 	public GuiControllerSelection(GuiScreen previous) {
 		this.previous = previous;
+		controllerSelection = HotplugHandler.getIPCHandler().startControllerSelection();
 	}
 	
 	@Override
@@ -51,10 +52,9 @@ public class GuiControllerSelection extends GuiScreen {
 	@Override
 	public void handleInput() throws IOException {
 		super.handleInput();
-		Controllers.poll();
-		if(Controllers.next()) {
-			if(Controllers.isEventButton() && Controllers.getEventButtonState()) {
-				HotplugHandler.loadSelectedController(Controllers.getEventSource());
+		if(controllerSelection.isFinished()) {
+			if(controllerSelection.getResult()) {
+				HotplugHandler.loadSelectedController(new BeanController(HotplugHandler.getIPCHandler()));
 				Minecraft.getMinecraft().displayGuiScreen(previous);
 			}
 		}
@@ -65,6 +65,7 @@ public class GuiControllerSelection extends GuiScreen {
 		if(button == useMouse) {
 			HotplugHandler.loadSelectedController(null);
 			Minecraft.getMinecraft().displayGuiScreen(previous);
+			HotplugHandler.getIPCHandler().stopControllerSelection();
 		}
 	}
 }

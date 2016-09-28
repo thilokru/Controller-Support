@@ -1,10 +1,10 @@
 package com.mhfs.controller.hotplug;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import com.mhfs.controller.daemon.DaemonMain;
+import com.mhfs.ipc.InvocationManager;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -17,8 +17,8 @@ public class DaemonManager {
 	private static Process process;
 	private static Channel channel;
 
-	public static void startDaemon() {
-		int port = 53356; //TODO find free udp port;
+	public static InvocationManager startDaemon() throws Exception {
+		int port = 3356; //TODO find free udp port;
 		String javaHome = System.getProperty("java.home");
 		String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
 		String classpath = System.getProperty("java.class.path");
@@ -28,11 +28,8 @@ public class DaemonManager {
 		ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, libPath, className, String.valueOf(port));
 		builder.inheritIO();
 
-		try {
-			process = builder.start();
-		} catch (IOException e) {
-			throw new RuntimeException("Error starting daemon!", e);
-		}
+		process = builder.start();
+		Thread.sleep(1000);
 		
 		ClientNetworkHandler cnw = new ClientNetworkHandler();
 		
@@ -43,8 +40,12 @@ public class DaemonManager {
 		b.channel(NioDatagramChannel.class);
 		b.handler(cnw);
 		ChannelFuture future = b.connect(adr).syncUninterruptibly();
+		
 		cnw.init(future.channel(), adr);
-
+		InvocationManager manager = new InvocationManager(cnw);
+		cnw.setInvocationManager(manager);
+		manager.init();
+		
 		Thread t = new Thread(() -> {
 			future.channel().closeFuture().syncUninterruptibly();
 			b.group().shutdownGracefully();
@@ -53,11 +54,15 @@ public class DaemonManager {
 		t.setName("Netty-IPC Shutdown Waiter");
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> stopDaemon()));
+		
+		return manager;
 	}
 	
 	public static void stopDaemon() {
 		if(process != null) {
 			process.destroy();
+		}
+		if(channel != null) {
 			channel.close();
 		}
 	}

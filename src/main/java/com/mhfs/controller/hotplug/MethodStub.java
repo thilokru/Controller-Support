@@ -1,11 +1,11 @@
 package com.mhfs.controller.hotplug;
 
-import com.mhfs.controller.daemon.ProvidedMethods;
+import com.mhfs.ipc.CallFuture;
 import com.mhfs.ipc.InvocationManager;
 
 import io.netty.buffer.ByteBuf;
 
-public class MethodStub implements ProvidedMethods{
+public class MethodStub implements ExtendedMethods{
 	
 	private InvocationManager manager;
 	
@@ -29,8 +29,14 @@ public class MethodStub implements ProvidedMethods{
 	}
 
 	@Override
-	public void awaitControllerSelection() {
-		manager.invoke("awaitControllerSelection").syncUninteruptable();
+	public boolean awaitControllerSelection() {
+		return (boolean) manager.invoke("awaitControllerSelection").syncUninteruptable().getResult();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public CallFuture<Boolean> startControllerSelection() {
+		return (CallFuture<Boolean>) manager.invoke("awaitControllerSelection");
 	}
 
 	@Override

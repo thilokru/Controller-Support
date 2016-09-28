@@ -21,8 +21,9 @@ public interface ProvidedMethods {
 	
 	/**
 	 * Returns when either a controller has been selected or {@link #stopControllerSelection()} has been called.
+	 * @return true if controller has been selected, false if stopControllerSelection was called.
 	 */
-	public void awaitControllerSelection();
+	public boolean awaitControllerSelection();
 	
 	/**
 	 * Stops {@link #awaitControllerSelection()}.
