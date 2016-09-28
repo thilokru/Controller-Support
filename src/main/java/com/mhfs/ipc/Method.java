@@ -40,4 +40,9 @@ public class Method<T> {
 	public static Method<?>  of(java.lang.reflect.Method method) {
 		return new Method(method.getName(), method.getReturnType(), method.getParameterTypes());
 	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Method<?> of(String name, Class<?> retType, Class<?>... argTypes) {
+		return new Method(name, retType, argTypes);
+	}
 }

@@ -16,10 +16,15 @@ public class CallFuture<T> {
 		this.method = method;
 	}
 	
+	public CallFuture() {
+		this(null);
+	}
+
 	@SuppressWarnings("unchecked")
 	void onReturn(Object result) {
 		this.finished = true;
 		this.result = Optional.ofNullable((T)result);
+		this.notify();
 	}
 	
 	int getID() {
@@ -42,21 +47,27 @@ public class CallFuture<T> {
 		return result.get();
 	}
 	
-	public void sync() throws InterruptedException {
+	public CallFuture<T> sync() throws InterruptedException {
 		while(!finished) {
-			Thread.sleep(1);
+			this.wait();
 		}
+		return this;
 	}
 	
-	public void syncUninteruptable (){
+	public CallFuture<T> syncUninteruptable (){
 		while(!finished) {
 			try {
 				sync();
 			} catch (InterruptedException e) {}
 		}
+		return this;
 	}
 	
 	public static <T> CallFuture<T> get(Method<T> method) {
 		return new CallFuture<T>(method);
+	}
+
+	static CallFuture<Method<?>[]> getExchangeFuture() {
+		return new CallFuture<Method<?>[]>();
 	}	
 }

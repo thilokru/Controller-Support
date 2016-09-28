@@ -21,7 +21,7 @@ public class IPCMethodProvider {
 		
 		providableMethods = new ArrayList<Method<?>>();
 		this.sender = sender;
-		
+		providableMethods.add(Method.of("getMethods", Method[].class));
 		for(java.lang.reflect.Method method : wrappable.getDeclaredMethods()) {
 			providableMethods.add(Method.of(method));
 		}
@@ -36,6 +36,9 @@ public class IPCMethodProvider {
 	}
 	
 	private Object invoke0(int methodID, int invocationID, Object[] arguments) throws NoSuchMethodException, SecurityException {
+		if(methodID == 0) {
+			sender.sendInvocationResult(invocationID, getWrappedMethods().toArray(new Method[0]));
+		}
 		for(Method<?> method : providableMethods) {
 			if(method.getCallID() == methodID) {
 				java.lang.reflect.Method actual = implementor.getClass().getDeclaredMethod(method.getName(), method.getArgClasses());

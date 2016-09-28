@@ -1,5 +1,6 @@
 package com.mhfs.ipc;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,9 +10,28 @@ public class InvocationManager {
 	private List<CallFuture<?>> invocations;
 	private ISendHandler sendHandler;
 	
-	public InvocationManager(ISendHandler sendHandler) {
+	private List<Method<?>> methods;
+	
+	public InvocationManager(ISendHandler sendHandler) throws Exception {
 		this.sendHandler = sendHandler;
 		this.invocations = new LinkedList<CallFuture<?>>();
+		
+		CallFuture<Method<?>[]> future = CallFuture.getExchangeFuture();
+		sendHandler.sendInvocationData(0, future.getID(), new Object[0]);
+		future.syncUninteruptable();
+		methods = new ArrayList<Method<?>>();
+		for(Method<?> method : future.getResult()) {
+			methods.add(method);
+		}
+	}
+	
+	public CallFuture<?> invoke(String name, Object... args) {
+		for(Method<?> method : methods) {
+			if(method.getName().equals(name)) {
+				return invoke(method, args);
+			}
+		}
+		return null;
 	}
 	
 	public <T> CallFuture<T> invoke(Method<T> method, Object... args) {
@@ -21,7 +41,7 @@ public class InvocationManager {
 			invocations.add(future);
 		}
 		try {
-			sendHandler.sendBytes(method.getCallID(), future.getID(), args);
+			sendHandler.sendInvocationData(method.getCallID(), future.getID(), args);
 		} catch (Exception e) {
 			throw new RuntimeException("Error sending invocation data!", e);
 		}
