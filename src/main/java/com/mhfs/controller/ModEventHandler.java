@@ -122,8 +122,8 @@ public class ModEventHandler {
 			Controller controller = cfg.getController();
 			controller.poll();
 			cfg.getMapping().apply();
-			HotplugHandler.checkControllerRemoved();
 		}
+		HotplugHandler.checkControllerManagerRestart();
 	}
 
 	@SubscribeEvent

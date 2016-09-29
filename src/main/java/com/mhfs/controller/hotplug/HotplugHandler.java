@@ -11,21 +11,22 @@ import com.mhfs.ipc.InvocationManager;
 public class HotplugHandler {
 
 	private static Logger LOG = ControllerSupportMod.LOG;
-	private static boolean initalized = false;
+	private static boolean initialized = false;
 	private static ExtendedMethods ipcInterface;
 	
 	/**
 	 * @return whether or not the thread just got started.
 	 */
 	public static boolean init() {
-		if(initalized)return false;
-		initalized = true;
+		if(initialized)return false;
+		initialized = true;
 		restartDaemon();
 		GuiControllerSelection.requestController();
 		return true;
 	}
 	
-	public static void checkControllerRemoved() {
+	public static void checkControllerManagerRestart() {
+		if(!initialized)return;
 		if(ipcInterface.restartRequired()) {
 			LOG.info("Controller disconnected!");
 			restartDaemon();
