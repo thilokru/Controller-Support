@@ -18,7 +18,10 @@ public class GuiControllerSelection extends GuiScreen {
 
 	public static void requestController() {
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiControllerSelection)return;
-		if(!HotplugHandler.getIPCHandler().hasControllers())return;
+		if(!HotplugHandler.getIPCHandler().hasControllers()) {
+			HotplugHandler.loadSelectedController(null);
+			return;
+		}
 		GuiControllerSelection gui = new GuiControllerSelection(Minecraft.getMinecraft().currentScreen);
 		Minecraft.getMinecraft().displayGuiScreen(gui);
 	}

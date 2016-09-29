@@ -1,6 +1,7 @@
 package com.mhfs.controller.gui;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -77,6 +78,23 @@ public class LabelButtonInfo extends GuiLabel {
 				}
 			}
 			labelList.add(new LabelButtonInfo(Minecraft.getMinecraft().fontRendererObj, -100, 2, 2, 0, 0));
+		} catch (Throwable t) {
+			Throwables.propagate(t);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void remove(GuiScreen screen) {
+		try {
+			Field fieldLabelList = GuiScreen.class.getDeclaredField("labelList");
+			fieldLabelList.setAccessible(true);
+			List<GuiLabel> labelList = (List<GuiLabel>) fieldLabelList.get(screen);
+			Iterator<GuiLabel> it = labelList.iterator();
+			while(it.hasNext()) {
+				if(it.next() instanceof LabelButtonInfo) {
+					it.remove();
+				}
+			}
 		} catch (Throwable t) {
 			Throwables.propagate(t);
 		}
