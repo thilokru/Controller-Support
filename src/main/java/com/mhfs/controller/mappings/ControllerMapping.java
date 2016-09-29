@@ -40,6 +40,7 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 	private volatile ResourceLocation location;
 	private volatile Map<Usage, StickConfig> currentStickMap;
 	private volatile Map<IControll<?>, IAction> currentButtonMap;
+	private volatile boolean forcedPhantomProtection = false;
 
 	public void apply() {
 		if (context == null) {
@@ -54,22 +55,28 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 			}
 
 			if (oldButtonMap != null) {
-				for (IControll<?> action : oldButtonMap.keySet()) {
-					for(IControll<?> other : currentButtonMap.keySet()) {
-						if(action.shouldEnablePhantomProtection(other)) {
-							other.enablePhantomProtection();
+				for (IControll<?> newAction : currentButtonMap.keySet()) {
+					if(forcedPhantomProtection) { 
+						newAction.enablePhantomProtection();
+					}else{
+						for (IControll<?> oldAction : oldButtonMap.keySet()) {
+							if (newAction.shouldEnablePhantomProtection(oldAction)) {
+								newAction.enablePhantomProtection();
+							}
 						}
 					}
 				}
 			}
+			forcedPhantomProtection = false;
 
 			currentStickMap = select(stickMap, context);
 			if (currentStickMap == null) {
 				currentStickMap = Maps.<Usage, StickConfig> newHashMap();
 			}
+		} else {
+			applyMouse();
+			applyButtons();
 		}
-		applyMouse();
-		applyButtons();
 	}
 
 	private static <T extends ICondition, V> V select(Map<T, V> input, GameContext context) {
@@ -172,6 +179,10 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 	public List<Pair<String, String>> getIngameButtonFunctions() {
 		GameContext ingame = GameContext.getIngameContext();
 		return getButtonFunctions0(select(buttonMap, ingame), select(stickMap, ingame));
+	}
+
+	public void forcePhantomProtection() {
+		this.forcedPhantomProtection = true;
 	}
 
 }
