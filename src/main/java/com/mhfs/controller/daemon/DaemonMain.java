@@ -12,6 +12,7 @@ import com.mhfs.ipc.executor.IPCMethodProvider;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -62,7 +63,7 @@ public class DaemonMain implements ProvidedMethods{
 	@Override
 	public ByteBuf getControllerData() {
 		Controllers.poll();
-		ByteBuf buf = SerializationHelper.serializeControllerData(selectedController);
+		ByteBuf buf = SerializationHelper.serializeControllerData(Unpooled.buffer(), selectedController);
 		Controllers.clearEvents();
 		return buf;
 	}

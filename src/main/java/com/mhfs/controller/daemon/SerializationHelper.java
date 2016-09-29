@@ -7,19 +7,22 @@ import org.lwjgl.input.Controller;
 import com.google.common.base.Throwables;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 public class SerializationHelper {
 
 	public static void writeString(ByteBuf buf, String string) {
-		buf.writeInt(string.length());
-		buf.writeBytes(string.getBytes());
+		char[] chars = string.toCharArray();
+		buf.writeInt(chars.length);
+		for(char c : chars)
+			buf.writeChar(c);
 	}
 	
 	public static String readString(ByteBuf buf) {
 		int length = buf.readInt();
-		byte[] data = new byte[length];
-		buf.readBytes(data);
+		char[] data = new char[length];
+		for(int i = 0; i < length; i++) {
+			data[i] = buf.readChar();
+		}
 		return new String(data);
 	}
 	
@@ -68,8 +71,7 @@ public class SerializationHelper {
 		}
 	}
 	
-	public static ByteBuf serializeControllerData(Controller controller) {
-		ByteBuf buf = Unpooled.buffer();
+	public static ByteBuf serializeControllerData(ByteBuf buf, Controller controller) {
 		buf.writeInt(controller.getIndex()); //Controller ID
 		writeString(buf, controller.getName()); //Controller Name
 		

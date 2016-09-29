@@ -51,7 +51,6 @@ public class NetworkHandler extends SimpleChannelInboundHandler<DatagramPacket> 
 		writeString(buf, result.getClass().getCanonicalName());
 		if(result instanceof ByteBuf) {
 			ByteBuf res = (ByteBuf) result;
-			buf.writeInt(res.readableBytes());
 			buf.writeBytes(res);
 		} else {
 			String json = gson.toJson(result);
