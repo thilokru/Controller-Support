@@ -20,6 +20,8 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.MouseHelper;
+import net.minecraft.util.MovementInputFromOptions;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -53,6 +55,10 @@ public class ModEventHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiMainMenu());
 			}
 		}
+		if(Minecraft.getMinecraft().thePlayer != null) {
+			Minecraft.getMinecraft().thePlayer.movementInput = new MovementInputFromOptions(Minecraft.getMinecraft().gameSettings);
+		}
+		Minecraft.getMinecraft().mouseHelper = new MouseHelper();
 	}
 
 	@SubscribeEvent
