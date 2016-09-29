@@ -13,4 +13,8 @@ public interface IControll<T> {
 	public T getData(GameContext context);
 
 	public String getControllName();
+	
+	public void enablePhantomProtection();
+	
+	public boolean shouldEnablePhantomProtection(IControll<?> controll);
 }

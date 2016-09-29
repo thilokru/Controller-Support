@@ -27,105 +27,112 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 
-public class ControllerMapping implements IResourceManagerReloadListener{
-	
+public class ControllerMapping implements IResourceManagerReloadListener {
+
 	private final static Gson gson = GsonHelper.getExposedGson();
 	private final static GameContext context = new GameContext();
-	
+
 	@Expose
 	private Map<ICondition, Map<IControll<?>, IAction>> buttonMap;
 	@Expose
 	private Map<ICondition, Map<Usage, StickConfig>> stickMap;
-	
+
 	private volatile ResourceLocation location;
 	private volatile Map<Usage, StickConfig> currentStickMap;
 	private volatile Map<IControll<?>, IAction> currentButtonMap;
-	
+
 	public void apply() {
-		if(context == null) {
-			throw new RuntimeException("ControllerMapping hasn't been initialized yet! (Hint: Call init() with a GameContext Object)");
+		if (context == null) {
+			throw new IllegalStateException("ControllerMapping hasn't been initialized yet! (Hint: Call init() with a GameContext Object)");
 		}
-		if(context.update()) {
+		if (context.update()) {
 			Map<IControll<?>, IAction> oldButtonMap = currentButtonMap;
-			currentStickMap = select(stickMap, context);
-			if(currentButtonMap != null){
-				for(IAction action : oldButtonMap.values()) {
-					if(!currentButtonMap.values().contains(action))
-						action.notRun();
+
+			currentButtonMap = select(buttonMap, context);
+			if (currentButtonMap == null) {
+				currentButtonMap = Maps.<IControll<?>, IAction> newHashMap();
+			}
+
+			if (oldButtonMap != null) {
+				for (IControll<?> action : oldButtonMap.keySet()) {
+					for(IControll<?> other : currentButtonMap.keySet()) {
+						if(action.shouldEnablePhantomProtection(other)) {
+							other.enablePhantomProtection();
+						}
+					}
 				}
 			}
-			if(currentStickMap == null) {
-				currentStickMap = Maps.<Usage, StickConfig>newHashMap();
-			}
-			
-			currentButtonMap = select(buttonMap, context);
-			if(currentButtonMap == null) {
-				currentButtonMap = Maps.<IControll<?>, IAction>newHashMap();
+
+			currentStickMap = select(stickMap, context);
+			if (currentStickMap == null) {
+				currentStickMap = Maps.<Usage, StickConfig> newHashMap();
 			}
 		}
 		applyMouse();
 		applyButtons();
 	}
-	
+
 	private static <T extends ICondition, V> V select(Map<T, V> input, GameContext context) {
-		for(Entry<T, V> entry : input.entrySet()) {
-			if(entry.getKey().check(context)) {
+		for (Entry<T, V> entry : input.entrySet()) {
+			if (entry.getKey().check(context)) {
 				return entry.getValue();
 			}
 		}
 		return null;
 	}
-	
+
 	private void applyButtons() {
-		for(Entry<IControll<?>, IAction> entry : currentButtonMap.entrySet()) {
+		for (Entry<IControll<?>, IAction> entry : currentButtonMap.entrySet()) {
 			IControll<?> controll = entry.getKey();
 			IAction action = entry.getValue();
 			handleControll(controll, action);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private <T> void handleControll(IControll<T> controll, IAction action) {
-		if(controll.check(ControllerMapping.context)) {
-			if(controll.hasAdditionalData()){
-				if(action instanceof IParametrizedAction<?>) {
+		if (controll.check(ControllerMapping.context)) {
+			if (controll.hasAdditionalData()) {
+				if (action instanceof IParametrizedAction<?>) {
 					try {
-						((IParametrizedAction<T>)action).run(controll.getData(context));
+						((IParametrizedAction<T>) action).run(controll.getData(context));
 					} catch (ClassCastException e) {
 						throw new RuntimeException("Invalid argument for action! " + action.getActionName() + " " + controll.getControllName(), e);
 					}
 				}
+			} else {
+				action.run();
 			}
-			action.run();
 		} else {
 			action.notRun();
 		}
 	}
-	
+
 	private void applyMouse() {
 		StickConfig cfg = getStick(Usage.MOUSE);
-		if(cfg == null) return;
+		if (cfg == null)
+			return;
 		Pair<Float, Float> input = cfg.getData(context.getController());
 		float dx = (float) (Math.pow(input.getLeft(), 3) * 25);
 		float dy = (float) (Math.pow(input.getRight(), 3) * 25);
 		ActionEmulationHelper.moveMouse(-dx, -dy);
 	}
-	
+
 	public StickConfig getStick(Usage usage) {
 		return currentStickMap.get(usage);
 	}
-	
-	public ResourceLocation getLocation(){
+
+	public ResourceLocation getLocation() {
 		return location;
 	}
-	
+
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
 		ControllerMapping newMapping = loadFromFile(location, resourceManager);
 		this.buttonMap = newMapping.buttonMap;
 		this.stickMap = newMapping.stickMap;
 	}
-	
+
 	public static ControllerMapping loadFromFile(ResourceLocation location, IResourceManager manager) {
 		try {
 			InputStream stream = manager.getResource(location).getInputStream();
@@ -139,7 +146,7 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 		}
 		return null;
 	}
-	
+
 	public static ControllerMapping loadFromConfig() {
 		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
@@ -149,14 +156,14 @@ public class ControllerMapping implements IResourceManagerReloadListener{
 	public List<Pair<String, String>> getButtonFunctions() {
 		return getButtonFunctions0(currentButtonMap, currentStickMap);
 	}
-	
+
 	private List<Pair<String, String>> getButtonFunctions0(Map<IControll<?>, IAction> buttonMap, Map<Usage, StickConfig> stickMap) {
-		List<Pair<String, String>> ret = Lists.<Pair<String, String>>newArrayList();
-		for(Entry<IControll<?>, IAction> entry : buttonMap.entrySet()) {
+		List<Pair<String, String>> ret = Lists.<Pair<String, String>> newArrayList();
+		for (Entry<IControll<?>, IAction> entry : buttonMap.entrySet()) {
 			String con = entry.getKey().getControllName();
 			ret.add(Pair.of(con, entry.getValue().getActionDescription()));
 		}
-		for(Entry<Usage, StickConfig> entry : stickMap.entrySet()) {
+		for (Entry<Usage, StickConfig> entry : stickMap.entrySet()) {
 			ret.add(Pair.of(entry.getValue().getStickName(), entry.getKey().getDescription()));
 		}
 		return ret;
