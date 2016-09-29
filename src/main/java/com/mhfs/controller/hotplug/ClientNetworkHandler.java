@@ -64,7 +64,6 @@ public class ClientNetworkHandler extends SimpleChannelInboundHandler<DatagramPa
 			val = buf.copy();
 		} else {
 			String json = readString(buf);
-			ControllerSupportMod.LOG.info(json);
 			val = gson.fromJson(json, clazz);
 		}
 		manager.returnValueCallback(id, val);

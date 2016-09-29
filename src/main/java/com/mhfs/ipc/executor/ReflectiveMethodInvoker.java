@@ -20,5 +20,10 @@ public class ReflectiveMethodInvoker implements Callable<Object> {
 		invokable.setAccessible(true);
 		return invokable.invoke(implementor, args);
 	}
+	
+	@Override
+	public String toString() {
+		return invokable.getName();
+	}
 
 }

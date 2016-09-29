@@ -20,9 +20,13 @@ public class RequestedExecution<T> implements Runnable{
 		try {
 			retValue = task.call();
 		} catch (Exception e) {
-			throw new RuntimeException("Error in task!", e);
+			throw new RuntimeException("Error in task! " + task.toString(), e);
 		}
-		sendHandler.sendInvocationResult(invocationID, retValue);
+		try {
+			sendHandler.sendInvocationResult(invocationID, retValue);
+		} catch (Exception e) {
+			throw new RuntimeException("Error sending data! " + task.toString(), e);
+		}
 	}
 
 }

@@ -48,7 +48,8 @@ public class NetworkHandler extends SimpleChannelInboundHandler<DatagramPacket> 
 	public void sendInvocationResult(int invocationID, Object result) {
 		ByteBuf buf = Unpooled.buffer();
 		buf.writeInt(invocationID);
-		writeString(buf, result.getClass().getCanonicalName());
+		String className = result == null ? Void.class.getCanonicalName() : result.getClass().getCanonicalName();
+		writeString(buf, className);
 		if(result instanceof ByteBuf) {
 			ByteBuf res = (ByteBuf) result;
 			buf.writeBytes(res);

@@ -9,38 +9,38 @@ public class InvocationManager {
 
 	private List<CallFuture<?>> invocations;
 	private ISendHandler sendHandler;
-	
+
 	private List<Method<?>> methods;
-	
+
 	public InvocationManager(ISendHandler sendHandler) {
 		this.sendHandler = sendHandler;
 		this.invocations = new LinkedList<CallFuture<?>>();
 	}
-	
+
 	public void init() throws Exception {
 		CallFuture<Method<?>[]> future = CallFuture.getExchangeFuture();
 		invocations.add(future);
 		sendHandler.sendInvocationData(0, future.getID(), new Object[0]);
 		future.syncUninteruptable();
 		methods = new ArrayList<Method<?>>();
-		for(Method<?> method : future.getResult()) {
+		for (Method<?> method : future.getResult()) {
 			methods.add(method);
 		}
 	}
-	
+
 	public CallFuture<?> invoke(String name, Object... args) {
-		for(Method<?> method : methods) {
-			if(method.getName().equals(name)) {
+		for (Method<?> method : methods) {
+			if (method.getName().equals(name)) {
 				return invoke(method, args);
 			}
 		}
 		return null;
 	}
-	
+
 	public <T> CallFuture<T> invoke(Method<T> method, Object... args) {
 		preInvocationChecks(method, args);
 		CallFuture<T> future = CallFuture.get(method);
-		synchronized(invocations) {
+		synchronized (invocations) {
 			invocations.add(future);
 		}
 		try {
@@ -50,15 +50,17 @@ public class InvocationManager {
 		}
 		return future;
 	}
-	
+
 	public void returnValueCallback(int futureID, Object value) {
-		Iterator<CallFuture<?>> it = invocations.iterator();
-		while (it.hasNext()){
-			CallFuture<?> future = it.next();
-			if(future.getID() == futureID) {
-				future.onReturn(value);
-				it.remove();
-				return;
+		synchronized (invocations) {
+			Iterator<CallFuture<?>> it = invocations.iterator();
+			while (it.hasNext()) {
+				CallFuture<?> future = it.next();
+				if (future.getID() == futureID) {
+					future.onReturn(value);
+					it.remove();
+					return;
+				}
 			}
 		}
 		throw new RuntimeException(String.format("The invocation with the call id '%d' couldn't be found!", futureID));
@@ -66,14 +68,14 @@ public class InvocationManager {
 
 	private void preInvocationChecks(Method<?> method, Object[] args) {
 		Class<?>[] validArgs = method.getArgClasses();
-		if(validArgs == null) {
+		if (validArgs == null) {
 			throw new NullPointerException(String.format("Method '%s' has a NULL arg class list!", method.getName()));
 		}
-		if(validArgs.length != args.length) {
+		if (validArgs.length != args.length) {
 			throw new IllegalArgumentException(String.format("Method '%s' accepts %d arguments, but got %d!", method.getName(), validArgs.length, args.length));
 		}
-		for(int i = 0; i < validArgs.length; i++) {
-			if(!validArgs[i].isAssignableFrom(args[i].getClass())) {
+		for (int i = 0; i < validArgs.length; i++) {
+			if (!validArgs[i].isAssignableFrom(args[i].getClass())) {
 				throw new ClassCastException(String.format("Method '%s' expected '%s' as argument at index %d, but got '%s'!", method.getName(), validArgs[i].getCanonicalName(), i, args[i].getClass().getCanonicalName()));
 			}
 		}

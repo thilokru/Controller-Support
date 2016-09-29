@@ -29,6 +29,7 @@ public class HotplugHandler {
 		if(ipcInterface.restartRequired()) {
 			LOG.info("Controller disconnected!");
 			restartDaemon();
+			GuiControllerSelection.requestController();
 		}
 	}
 
