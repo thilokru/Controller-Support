@@ -1,7 +1,9 @@
 package com.mhfs.controller.hotplug;
 
 import java.io.File;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 
 import com.mhfs.controller.daemon.DaemonMain;
 import com.mhfs.ipc.InvocationManager;
@@ -18,7 +20,7 @@ public class DaemonManager {
 	private static Channel channel;
 
 	public static InvocationManager startDaemon() throws Exception {
-		int port = 3356; //TODO find free udp port;
+		int port = findFreePort();
 		String javaHome = System.getProperty("java.home");
 		String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
 		String classpath = System.getProperty("java.class.path");
@@ -29,10 +31,9 @@ public class DaemonManager {
 		builder.inheritIO();
 
 		process = builder.start();
-		Thread.sleep(1000);
+		Thread.sleep(1000);//Waiting for Daemon to start.
 		
 		ClientNetworkHandler cnw = new ClientNetworkHandler();
-		
 		InetSocketAddress adr = new InetSocketAddress("localhost", port);
 		
 		Bootstrap b = new Bootstrap();
@@ -58,6 +59,13 @@ public class DaemonManager {
 		return manager;
 	}
 	
+	private static int findFreePort() throws SocketException {
+		DatagramSocket socket = new DatagramSocket();
+		int port = socket.getLocalPort();
+		socket.close();
+		return port;
+	}
+
 	public static void stopDaemon() {
 		if(process != null) {
 			process.destroy();
