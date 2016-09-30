@@ -12,6 +12,7 @@ public class StickControll implements IControll<Float> {
 	private float threshold;
 	private boolean smallerThan;
 	private String controllName;
+	private boolean phantomProtection;
 	
 	public StickControll(int axis, float threshold, boolean smallerThan) {
 		this.axis = axis;
@@ -26,9 +27,20 @@ public class StickControll implements IControll<Float> {
 		this.smallerThan = Boolean.parseBoolean(sub[2].trim());
 		if(sub.length > 3) this.controllName = sub[3].trim();
 	}
-
+	
 	@Override
 	public boolean check(GameContext context) {
+		if(!phantomProtection) {
+			return check0(context);
+		} else {
+			if(!check0(context)) {
+				this.phantomProtection = false;
+			}
+			return false;
+		}
+	}
+
+	private boolean check0(GameContext context) {
 		Controller controller = context.getController();
 		float value;
 		
@@ -65,6 +77,22 @@ public class StickControll implements IControll<Float> {
 	@Override
 	public Float getData(GameContext context) {
 		return context.getController().getAxisValue(axis);
+	}
+
+	@Override
+	public void enablePhantomProtection() {
+		this.phantomProtection = true;
+	}
+
+	@Override
+	public boolean shouldEnablePhantomProtection(IControll<?> controll) {
+		if(controll instanceof StickControll) {
+			StickControll cont = (StickControll) controll;
+			if(cont.axis == this.axis) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
