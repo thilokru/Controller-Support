@@ -3,7 +3,6 @@ package com.mhfs.controller.gui;
 import java.awt.Color;
 import java.io.IOException;
 
-import com.mhfs.controller.Config;
 import com.mhfs.controller.daemon.BeanController;
 import com.mhfs.controller.hotplug.HotplugHandler;
 import com.mhfs.ipc.CallFuture;
@@ -60,7 +59,6 @@ public class GuiControllerSelection extends GuiScreen {
 			if(controllerSelection.getResult()) {
 				HotplugHandler.loadSelectedController(new BeanController(HotplugHandler.getIPCHandler()));
 				Minecraft.getMinecraft().displayGuiScreen(previous);
-				Config.INSTANCE.getMapping().forcePhantomProtection();
 			}
 		}
 	}

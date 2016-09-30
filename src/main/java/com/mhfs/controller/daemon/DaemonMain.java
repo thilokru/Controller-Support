@@ -88,6 +88,8 @@ public class DaemonMain implements ProvidedMethods{
 				if(Controllers.isEventButton()) {
 					controllerSelected = true;
 					selectedController = Controllers.getEventSource();
+					int selectedButton = Controllers.getEventControlIndex();
+					while(selectedController.isButtonPressed(selectedButton))selectedController.poll();
 					return true;
 				}
 			}
