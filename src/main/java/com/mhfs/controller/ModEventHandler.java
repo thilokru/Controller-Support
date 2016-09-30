@@ -44,6 +44,7 @@ public class ModEventHandler {
 
 	public void activate() {
 		this.active = true;
+		Minecraft.getMinecraft().gameSettings.realmsNotifications = false;
 	}
 
 	public void deactivate() {
@@ -59,6 +60,7 @@ public class ModEventHandler {
 			Minecraft.getMinecraft().thePlayer.movementInput = new MovementInputFromOptions(Minecraft.getMinecraft().gameSettings);
 		}
 		Minecraft.getMinecraft().mouseHelper = new MouseHelper();
+		Minecraft.getMinecraft().gameSettings.realmsNotifications = true;
 	}
 
 	@SubscribeEvent
