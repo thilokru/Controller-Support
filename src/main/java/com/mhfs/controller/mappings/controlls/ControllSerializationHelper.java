@@ -16,7 +16,7 @@ public class ControllSerializationHelper {
 		String args = serializedCondition.substring(openingIndex + 1, closingIndex);
 		switch(op) {
 		case "dpad":
-			return new DPadControll();
+			return new DPadControll(args);
 		case "button":
 			return new ButtonControll(args);
 		case "stick":
