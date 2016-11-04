@@ -99,13 +99,11 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 	@SuppressWarnings("unchecked")
 	private <T> void handleControll(IControll<T> controll, IAction action) {
 		if (controll.check(ControllerMapping.context)) {
-			if (controll.hasAdditionalData()) {
-				if (action instanceof IParametrizedAction<?>) {
-					try {
-						((IParametrizedAction<T>) action).run(controll.getData(context));
-					} catch (ClassCastException e) {
-						throw new RuntimeException("Invalid argument for action! " + action.getActionName() + " " + controll.getControllName(), e);
-					}
+			if (controll.hasAdditionalData() && action instanceof IParametrizedAction<?>) {
+				try {
+					((IParametrizedAction<T>) action).run(controll.getData(context));
+				} catch (ClassCastException e) {
+					throw new RuntimeException("Invalid argument for action! " + action.getActionName() + " " + controll.getControllName(), e);
 				}
 			} else {
 				action.run();
