@@ -19,13 +19,28 @@ public class StickControll implements IControll<Float> {
 		this.threshold = threshold;
 		this.smallerThan = smallerThan;
 	}
-
+	
+	/**
+	 * New format STICK( ^name^ < ^value^, ^icon^)
+	 * @param args
+	 */
 	public StickControll(String args) {
 		String[] sub = args.split(",");
-		this.axis = ControllInfo.get().getAxisID(sub[0].trim());
-		this.threshold = Float.parseFloat(sub[1].trim());
-		this.smallerThan = Boolean.parseBoolean(sub[2].trim());
-		if(sub.length > 3) this.controllName = sub[3].trim();
+		String unequation = sub[0];
+		if(unequation.contains("<")) {
+			this.smallerThan = true;
+			String[] uneqArgs = unequation.split("<");
+			this.axis = ControllInfo.get().getAxisID(uneqArgs[0].trim());
+			this.threshold = Float.parseFloat(uneqArgs[1].trim());
+		} else if(unequation.contains(">")) {
+			this.smallerThan = false;
+			String[] uneqArgs = unequation.split(">");
+			this.axis = ControllInfo.get().getAxisID(uneqArgs[0].trim());
+			this.threshold = Float.parseFloat(uneqArgs[1].trim());
+		} else {
+			throw new RuntimeException(String.format("Arguments '%s' did not provide a valid comparison!", args));
+		}
+		if(sub.length > 1) this.controllName = sub[1].trim();
 	}
 	
 	@Override
@@ -59,9 +74,9 @@ public class StickControll implements IControll<Float> {
 	@Override
 	public String toSaveString() {
 		if(controllName != null) {
-			return String.format("STICK(%s,%f,%s,%s)", getControllName(), threshold, Boolean.toString(smallerThan), controllName);
+			return String.format("STICK(%s %s %f, %s)", getControllName(), smallerThan ? "<" : ">", threshold, controllName);
 		} else {
-			return String.format("STICK(%s,%f,%s)", getControllName(), threshold, Boolean.toString(smallerThan));
+			return String.format("STICK(%s %s %f)", getControllName(), smallerThan ? "<" : ">", threshold);
 		}
 	}
 
