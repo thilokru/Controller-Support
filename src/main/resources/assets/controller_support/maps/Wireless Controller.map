@@ -1,0 +1,39 @@
+{
+	buttons: {
+		"SQUARE": 0,
+		"X": 1,
+		"O": 2,
+		"TRIANGLE": 3,
+		"LB": 4,
+		"RB": 5,
+		"SHARE": 8,
+		"HOME": 12,
+		"OPTIONS": 9,
+		"LS": 10,
+		"RS": 11
+	},
+	axes: {
+		"LY": 2,
+		"LX": 3,
+		"RY": 0,
+		"RX": 1,
+		"Z": 4,
+		"DX": -1,
+		"DY": -2
+	},
+	sticks: {
+		"L": {
+			xName: "LX",
+			yName: "LY",
+			xInverted: true,
+			yInverted: true		
+		},
+		"R": {
+			xName: "RX",
+			yName: "RY",
+			xInverted: false,
+			yInverted: true
+		}
+	},
+	texture: "controller_support:textures/xbox-buttons.cfg"
+}
