@@ -45,7 +45,9 @@ public class CallFuture<T> {
 	}
 	
 	public T getResult() {
-		return result.get();
+		synchronized(this) {
+			return result.get();
+		}
 	}
 	
 	public CallFuture<T> sync() throws InterruptedException {
