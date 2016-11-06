@@ -2,8 +2,9 @@ package com.mhfs.controller.hotplug;
 
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
-import com.mhfs.controller.Config;
+
 import com.mhfs.controller.ControllerSupportMod;
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.gui.GuiControllerSelection;
 import com.mhfs.controller.mappings.ControllerMapping;
 import com.mhfs.ipc.InvocationManager;

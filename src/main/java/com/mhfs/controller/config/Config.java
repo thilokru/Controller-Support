@@ -1,10 +1,10 @@
-package com.mhfs.controller;
+package com.mhfs.controller.config;
 
 import org.lwjgl.input.Controller;
 
+import com.mhfs.controller.config.IndexData.ControllerCfg;
 import com.mhfs.controller.mappings.ControllerMapping;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -25,8 +25,7 @@ public class Config extends Configuration{
 	private boolean invertedLookAxes;
 	private ControllerMapping mapping;
 	private Controller controller;
-	private ResourceLocation buttonNameMap;
-	private ResourceLocation mappingLocation;
+	private ControllerCfg controllerConfig;
 	private String[] optionClasses;
 	private boolean debugController;
 	
@@ -46,7 +45,6 @@ public class Config extends Configuration{
 		super.load();
 		this.analogSensitivity = this.getFloat("analogSensitivity", CATEGORY_GENERAL, 0.5F, 0F, 1.0F, "The sensitivity of the analog sticks");
 		this.invertedLookAxes = this.getBoolean("invertedAxes", CATEGORY_GENERAL, false, "Whether the view axes are inverted");
-		this.mappingLocation = new ResourceLocation(this.getString("mappingLocation", CATEGORY_GENERAL, "controller_support:maps/mapping.cfg", "From where to load the buttons config."));
 		this.optionClasses = this.getStringList("optionClasses", CATEGORY_GENERAL, DEFAULT_OPTION_CLASSES, "The classes that trigger the OPTIONS()-condition. Has regex-support.");
 		this.debugController = this.getBoolean("debugControllerInput", CATEGORY_GENERAL, false, "When set to true, button and axis ids are printed into the logfiles.");
 	}
@@ -89,21 +87,12 @@ public class Config extends Configuration{
 		this.controller = controller;
 	}
 
-	public void setButtonNameMapLocation(ResourceLocation loc) {
-		this.buttonNameMap = loc;
+	public void setControllerConfig(ControllerCfg cfg) {
+		this.controllerConfig = cfg;
 	}
 	
-	public ResourceLocation getButtonNameMapLocation() {
-		return this.buttonNameMap;
-	}
-
-	public ResourceLocation getActionMappingLocation() {
-		return mappingLocation;
-	}
-
-	public void setActionMappingLocation(ResourceLocation mappingLocation) {
-		this.mappingLocation = mappingLocation;
-		this.get(CATEGORY_GENERAL, "mappingLocation", "controller_support:maps/mapping.cfg").set(mappingLocation.toString());
+	public ControllerCfg getControllerConfig() {
+		return this.controllerConfig;
 	}
 	
 	public String[] getOptionsClasses() {

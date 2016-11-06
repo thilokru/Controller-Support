@@ -1,0 +1,16 @@
+{
+	".*xbox": {
+		controlls: "controller_support:maps/xbox/buttons.map",
+		mappings: {
+			"Default Mapping":"controller_support:maps/xbox/default.cfg"
+		},
+		selected: "Default Mapping"
+	},
+	".*wireless controller": {
+		controlls: "controller_support:maps/ps4/buttons.map",
+		mappings: {
+			"Default Mapping":"controller_support:maps/ps4/default.cfg"
+		},
+		selected: "Default Mapping"
+	}
+}

@@ -13,8 +13,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-import com.mhfs.controller.Config;
 import com.mhfs.controller.ControllerSupportMod;
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.mappings.actions.ActionEmulationHelper;
 import com.mhfs.controller.mappings.actions.IAction;
 import com.mhfs.controller.mappings.actions.IParametrizedAction;
@@ -133,16 +133,15 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
+		ControllInfo.updateButtonMap(Config.INSTANCE.getController(), resourceManager);
 		ControllerMapping newMapping = loadFromFile(location, resourceManager);
 		this.buttonMap = newMapping.buttonMap;
 		this.stickMap = newMapping.stickMap;
 	}
 
-	public static ControllerMapping loadFromFile(ResourceLocation location, IResourceManager manager) {
+	private static ControllerMapping loadFromFile(ResourceLocation location, IResourceManager manager) {
 		try {
 			InputStream stream = manager.getResource(location).getInputStream();
-			Config cfg = Config.INSTANCE;
-			ControllInfo.updateButtonMap(cfg.getController(), manager);
 			ControllerMapping mapping = gson.fromJson(new InputStreamReader(stream), ControllerMapping.class);
 			mapping.location = location;
 			return mapping;
@@ -153,8 +152,9 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 	}
 
 	public static ControllerMapping loadFromConfig() {
-		ResourceLocation loc = Config.INSTANCE.getActionMappingLocation();
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+		ControllInfo.updateButtonMap(Config.INSTANCE.getController(), manager);
+		ResourceLocation loc = Config.INSTANCE.getControllerConfig().getActionMapping();
 		return loadFromFile(loc, manager);
 	}
 

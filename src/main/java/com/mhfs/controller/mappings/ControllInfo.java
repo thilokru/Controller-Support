@@ -14,8 +14,8 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mhfs.controller.Config;
-import com.mhfs.controller.ControllerSupportMod;
+import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.IndexData;
 import com.mhfs.controller.textures.TextureHelper;
 
 import net.minecraft.client.resources.IResourceManager;
@@ -56,7 +56,7 @@ public class ControllInfo {
 	private static ControllInfo load(ResourceLocation location, IResourceManager manager) {
 		InputStreamReader isr = null;
 		try {
-			isr = new InputStreamReader(manager.getResource(Config.INSTANCE.getButtonNameMapLocation()).getInputStream());
+			isr = new InputStreamReader(manager.getResource(location).getInputStream());
 		} catch (IOException e) {
 			Throwables.propagate(e);
 		}
@@ -83,16 +83,8 @@ public class ControllInfo {
 	
 	public static void updateButtonMap(Controller controller, IResourceManager manager) {
 		String name = controller.getName();
-		if(name.toLowerCase().contains("xbox")) {
-			setMap("xbox");
-		} else {
-			setMap(name);
-		}
-		ControllInfo.load(Config.INSTANCE.getButtonNameMapLocation(), manager);
-	}
-	
-	private static void setMap(String mapName) {
-		Config.INSTANCE.setButtonNameMapLocation(new ResourceLocation(ControllerSupportMod.MODID, String.format("maps/%s.map", mapName)));
+		Config.INSTANCE.setControllerConfig(IndexData.get().controller(name));
+		ControllInfo.load(Config.INSTANCE.getControllerConfig().getButtonIDMapping(), manager);
 	}
 	
 	public TextureHelper getTextureHelper() {

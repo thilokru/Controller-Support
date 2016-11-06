@@ -3,6 +3,7 @@ package com.mhfs.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.mappings.actions.ActionRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;

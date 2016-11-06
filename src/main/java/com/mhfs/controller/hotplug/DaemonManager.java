@@ -5,7 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 
-import com.mhfs.controller.Config;
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.daemon.DaemonMain;
 import com.mhfs.ipc.InvocationManager;
 

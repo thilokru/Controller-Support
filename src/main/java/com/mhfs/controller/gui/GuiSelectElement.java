@@ -4,7 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL11;
 
-import com.mhfs.controller.Config;
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.mappings.ControllerMapping;
 import com.mhfs.controller.mappings.StickConfig;
 import com.mhfs.controller.mappings.Usage;

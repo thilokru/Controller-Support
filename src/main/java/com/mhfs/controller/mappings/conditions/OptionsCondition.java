@@ -1,6 +1,6 @@
 package com.mhfs.controller.mappings.conditions;
 
-import com.mhfs.controller.Config;
+import com.mhfs.controller.config.Config;
 
 public class OptionsCondition implements ICondition{
 

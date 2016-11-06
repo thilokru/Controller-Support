@@ -2,6 +2,8 @@ package com.mhfs.controller;
 
 import java.util.List;
 import org.lwjgl.input.Controller;
+
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.gui.GuiButtonSelector;
 import com.mhfs.controller.gui.GuiScreenControllerHelp;
 import com.mhfs.controller.gui.GuiTextInput;

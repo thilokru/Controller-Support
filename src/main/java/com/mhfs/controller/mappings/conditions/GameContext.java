@@ -2,7 +2,7 @@ package com.mhfs.controller.mappings.conditions;
 
 import org.lwjgl.input.Controller;
 
-import com.mhfs.controller.Config;
+import com.mhfs.controller.config.Config;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.mhfs.controller.Config;
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.mappings.ControllerMapping;
 
 import net.minecraft.client.Minecraft;

@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Throwables;
-import com.mhfs.controller.Config;
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.mappings.ControllInfo;
 import com.mhfs.controller.textures.TextureHelper;
 import com.mhfs.controller.textures.TextureHelper.SubTexture;

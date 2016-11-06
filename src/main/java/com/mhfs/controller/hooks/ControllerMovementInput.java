@@ -3,7 +3,7 @@ package com.mhfs.controller.hooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Controller;
 
-import com.mhfs.controller.Config;
+import com.mhfs.controller.config.Config;
 import com.mhfs.controller.mappings.StickConfig;
 import com.mhfs.controller.mappings.Usage;
 
