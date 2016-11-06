@@ -5,6 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 
+import com.mhfs.controller.Config;
 import com.mhfs.controller.daemon.DaemonMain;
 import com.mhfs.ipc.InvocationManager;
 
@@ -26,8 +27,9 @@ public class DaemonManager {
 		String classpath = System.getProperty("java.class.path");
 		String libPath = "-Djava.library.path=" + System.getProperty("java.library.path");
 		String className = DaemonMain.class.getCanonicalName();
+		String args = Config.INSTANCE.shouldDebugInput() ? "debugControllerInput" : "";
 
-		ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, libPath, className, String.valueOf(port));
+		ProcessBuilder builder = new ProcessBuilder(javaBin, "-cp", classpath, libPath, className, String.valueOf(port), args);
 		builder.inheritIO();
 
 		process = builder.start();

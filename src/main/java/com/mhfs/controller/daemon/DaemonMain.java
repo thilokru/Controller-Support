@@ -22,6 +22,7 @@ public class DaemonMain implements ProvidedMethods{
 	
 	private static NetworkHandler handler;
 	private boolean controllerSelected;
+	private static boolean debug;
 	private Controller selectedController;
 
 	public static void main(String[] args) {
@@ -29,6 +30,13 @@ public class DaemonMain implements ProvidedMethods{
 			Controllers.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
+		}
+		
+		for(String s : args) {
+			if(s.equals("debugControllerInput")) {
+				debug = true;
+				System.out.println("Debugging!");
+			}
 		}
 		
 		int port = Integer.parseInt(args[0]);
@@ -64,8 +72,21 @@ public class DaemonMain implements ProvidedMethods{
 	public ByteBuf getControllerData() {
 		Controllers.poll();
 		ByteBuf buf = SerializationHelper.serializeControllerData(Unpooled.buffer(), selectedController);
+		if(debug)debug();
 		Controllers.clearEvents();
 		return buf;
+	}
+	
+	private void debug() {
+		while(Controllers.next()) {
+			if(Controllers.isEventButton() && Controllers.getEventButtonState()) {
+				System.out.println(String.format("Button '%s' was pressed!", Controllers.getEventControlIndex()));
+			} else if(Controllers.isEventAxis() && Controllers.getEventSource().getAxisValue(Controllers.getEventControlIndex()) != 0.0) {
+				System.out.println(String.format("Axis '%s' was moved!", Controllers.getEventControlIndex()));
+			} else if(Controllers.isEventPovX() || Controllers.isEventPovY()) {
+				System.out.println("POV-Action!");
+			}
+		}
 	}
 
 	@Override
