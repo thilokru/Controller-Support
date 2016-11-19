@@ -1,8 +1,10 @@
 package com.mhfs.controller.gui;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import org.lwjgl.input.Keyboard;
+
 import com.mhfs.controller.mappings.actions.ActionButtonState;
 import com.mhfs.controller.mappings.actions.ActionRegistry;
 
@@ -80,9 +82,22 @@ public class GuiTextInput extends GuiScreen{
 		if(button == this.buttonConfirm) {
 			Minecraft.getMinecraft().currentScreen = previous;
 			inputTarget.setText(textDisplay.getText());
+			previous.updateScreen();
+			try {
+				reflectiveTextfieldUpdate();
+			} catch (Exception e) {
+				throw new RuntimeException("Error reflecting on previous gui!", e);
+			}
 		}
 	}
 	
+	private void reflectiveTextfieldUpdate() throws Exception {
+		Method method = GuiScreen.class.getDeclaredMethod("keyTyped", char.class, int.class);
+		method.setAccessible(true);
+		method.invoke(this.previous, ' ', Keyboard.KEY_SPACE);
+		method.invoke(this.previous, ' ', Keyboard.KEY_BACK);
+	}
+
 	@Override
 	public void updateScreen() {
 		textDisplay.updateCursorCounter();

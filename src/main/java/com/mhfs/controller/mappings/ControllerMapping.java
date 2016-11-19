@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.Logger;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -74,9 +76,39 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 				currentStickMap = Maps.<Usage, StickConfig> newHashMap();
 			}
 		} else {
+			try {
 			applyMouse();
 			applyButtons();
+			} catch (Exception e) {
+				ControllerSupportMod.LOG.error("Exception applying controls! State:");
+				outputState();
+				ControllerSupportMod.LOG.catching(e);
+				Throwables.propagate(e);
+			}
 		}
+	}
+	
+	private void outputState() {
+		Logger log = ControllerSupportMod.LOG;
+		log.info(String.format("GameContext: Gui: %s Ingame: %s Options screen: %s", context.getCurrentScreen().getClass().getCanonicalName(), context.isIngame(), isOptionScreen()));
+		log.info("Button Map:");
+		for (Entry<IControll<?>, IAction> entry : currentButtonMap.entrySet()) {
+			log.info(String.format("- %s : %s", entry.getKey().toSaveString(), entry.getValue().getActionName()));
+		}
+		log.info("Stick Map:");
+		for(Entry<Usage, StickConfig> entry : currentStickMap.entrySet()) {
+			log.info(String.format("- %s : %s", entry.getKey().toString(), entry.getValue().getStickName()));
+		}
+	}
+	
+	private boolean isOptionScreen() {
+		if(context.getCurrentScreen() == null)return false;
+		String checkName = context.getCurrentScreen().getClass().getCanonicalName();
+		for(String clazzName : Config.INSTANCE.getOptionsClasses()) {
+			if(checkName.matches(clazzName))
+				return true;
+		}
+		return false;
 	}
 
 	private static <T extends ICondition, V> V select(Map<T, V> input, GameContext context) {
