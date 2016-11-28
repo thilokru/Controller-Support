@@ -4,8 +4,8 @@
 		"X": 1,
 		"O": 2,
 		"TRIANGLE": 3,
-		"LB": 4,
-		"RB": 5,
+		"L1": 4,
+		"R1": 5,
 		"SHARE": 8,
 		"HOME": 12,
 		"OPTIONS": 9,
@@ -18,8 +18,8 @@
 		"LX": 3,
 		"RY": 0,
 		"RX": 1,
-		"RT": 4,
-		"LT": 5,
+		"R2": 4,
+		"L2": 5,
 		"DX": -1,
 		"DY": -2
 	},
@@ -37,5 +37,5 @@
 			yInverted: true
 		}
 	},
-	texture: "controller_support:textures/xbox-buttons.cfg"
+	texture: "controller_support:textures/ps4-buttons.cfg"
 }
