@@ -35,7 +35,7 @@ public class GuiScreenControllerHelp extends GuiScreen {
 		this.buttonList.add(new GuiButton(0, (this.width / 2) - 100, this.height - 20, I18n.format("gui.back")));
 		int currentY = 50;
 		for(Pair<String, String> entry : functions) {
-			lineWidth = Math.max(lineWidth, LabelButtonInfo.scaledTextureSize + this.fontRendererObj.getStringWidth(entry.getValue()) + LabelButtonInfo.boundary * 2);
+			lineWidth = Math.max(lineWidth, LabelButtonInfo.scaledTextureSize + this.fontRenderer.getStringWidth(entry.getValue()) + LabelButtonInfo.boundary * 2);
 			currentY += LabelButtonInfo.scaledTextureSize + 3 * LabelButtonInfo.boundary;
 			if(currentY > this.height - 50) {
 				currentY = 50;
@@ -49,7 +49,7 @@ public class GuiScreenControllerHelp extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		LabelButtonInfo helper = new LabelButtonInfo(this.fontRendererObj, 0, 0, 0, 0, 0);
+		LabelButtonInfo helper = new LabelButtonInfo(this.fontRenderer, 0, 0, 0, 0, 0);
 		int currentY = 50;
 		int currentX = startX;
 		for(Pair<String, String> entry : functions) {

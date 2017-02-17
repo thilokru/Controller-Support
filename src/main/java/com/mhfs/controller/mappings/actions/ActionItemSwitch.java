@@ -13,8 +13,8 @@ public class ActionItemSwitch extends ActionToEvent<Object>{
 	
 	@Override
 	public void buttonDown() {
-		if(Minecraft.getMinecraft().thePlayer != null)
-			Minecraft.getMinecraft().thePlayer.inventory.changeCurrentItem(down ? 1 : -1);
+		if(Minecraft.getMinecraft().player != null)
+			Minecraft.getMinecraft().player.inventory.changeCurrentItem(down ? 1 : -1);
 	}
 
 	@Override

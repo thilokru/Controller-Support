@@ -39,7 +39,7 @@ public class GuiTextInput extends GuiScreen{
 		String text = "";
 		if(textDisplay != null)
 			text = textDisplay.getText();
-		textDisplay = new GuiTextField(0, fontRendererObj, this.width / 2 - 100, 30, 200, 20);
+		textDisplay = new GuiTextField(0, fontRenderer, this.width / 2 - 100, 30, 200, 20);
 		textDisplay.setFocused(true);
 		textDisplay.setText(text);
 		

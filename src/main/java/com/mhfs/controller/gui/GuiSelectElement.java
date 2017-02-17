@@ -86,7 +86,7 @@ public abstract class GuiSelectElement<T> extends Gui {
 		GlStateManager.disableBlend();
 		GlStateManager.enableTexture2D();
 		
-		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		
 		int fX = (int) (centerX + (Math.sin(startAngle) * innerDistance + Math.sin(startAngle) * outerDistance + Math.sin(stopAngle) * outerDistance + Math.sin(stopAngle) * innerDistance) / 4 );
 		

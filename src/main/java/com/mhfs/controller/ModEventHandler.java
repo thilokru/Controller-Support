@@ -58,8 +58,8 @@ public class ModEventHandler {
 				Minecraft.getMinecraft().displayGuiScreen(new GuiMainMenu());
 			}
 		}
-		if(Minecraft.getMinecraft().thePlayer != null) {
-			Minecraft.getMinecraft().thePlayer.movementInput = new MovementInputFromOptions(Minecraft.getMinecraft().gameSettings);
+		if(Minecraft.getMinecraft().player != null) {
+			Minecraft.getMinecraft().player.movementInput = new MovementInputFromOptions(Minecraft.getMinecraft().gameSettings);
 		}
 		Minecraft.getMinecraft().mouseHelper = new MouseHelper();
 		Minecraft.getMinecraft().gameSettings.realmsNotifications = true;
@@ -72,7 +72,7 @@ public class ModEventHandler {
 				return;
 			if (((EntityPlayerSP) event.getEntityLiving()).movementInput instanceof ControllerMovementInput)
 				return;
-			Minecraft.getMinecraft().thePlayer.movementInput = new ControllerMovementInput(Minecraft.getMinecraft().gameSettings);
+			Minecraft.getMinecraft().player.movementInput = new ControllerMovementInput(Minecraft.getMinecraft().gameSettings);
 			Minecraft.getMinecraft().mouseHelper = new ControllerMouseHelper();
 		}
 	}

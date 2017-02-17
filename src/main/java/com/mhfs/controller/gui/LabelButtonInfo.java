@@ -77,7 +77,7 @@ public class LabelButtonInfo extends GuiLabel {
 					return;
 				}
 			}
-			labelList.add(new LabelButtonInfo(Minecraft.getMinecraft().fontRendererObj, -100, 2, 2, 0, 0));
+			labelList.add(new LabelButtonInfo(Minecraft.getMinecraft().fontRenderer, -100, 2, 2, 0, 0));
 		} catch (Throwable t) {
 			Throwables.propagate(t);
 		}
