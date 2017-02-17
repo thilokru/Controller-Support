@@ -2,6 +2,8 @@ package com.mhfs.controller.daemon;
 
 import org.lwjgl.input.Controller;
 
+import io.netty.buffer.ByteBuf;
+
 public class BeanController implements Controller {
 	
 	String name;
@@ -32,7 +34,9 @@ public class BeanController implements Controller {
 
 	@Override
 	public void poll() {
-		SerializationHelper.sync(this, methodProvider.getControllerData());
+		ByteBuf buffer = methodProvider.getControllerData();
+		SerializationHelper.sync(this, buffer);
+		buffer.release(); //Fixes resource leak
 	}
 
 	@Override
