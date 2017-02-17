@@ -30,6 +30,8 @@ public class ConditionSerializationHelper {
 			return new IngameCondition();
 		case "options":
 			return new OptionsCondition();
+		case "container":
+			return new ContainerCondition();
 		default:
 			throw new RuntimeException(String.format("Unknown condition type %s", op));
 		}
