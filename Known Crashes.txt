@@ -1,0 +1,4 @@
+This Mod is known to crash under the following circumstances, but it is unclear, why:
+
+- When NVIDIA 3DVision Driver is installed, when trying to open a GuiScreen with the controller, the game hangs and crashes,
+  but no crash report is displayed. In the Windows logs there is the reference to the nvSCAPI64.dll driver.
