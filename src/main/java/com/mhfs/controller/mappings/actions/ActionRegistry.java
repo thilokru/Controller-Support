@@ -17,6 +17,7 @@ public class ActionRegistry {
 		ActionRegistry.registerAction(new ActionButtonState("CAPITAL", "gui.input.capital"));
 		ActionRegistry.registerAction(new ActionButtonState("SPECIAL_CHAR", "gui.input.special"));
 		ActionRegistry.registerAction(new ActionButtonState("SELECT", "gui.input.select"));
+		ActionRegistry.registerAction(new ActionContainerSlotChange());
 		ActionKeyBind.registerActions();
 		ActionItemSwitch.register();
 	}

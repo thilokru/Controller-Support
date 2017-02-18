@@ -6,6 +6,10 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+import org.lwjgl.input.Mouse;
+
+import net.minecraft.client.Minecraft;
+
 public class ActionEmulationHelper {
 
 	private static Robot robot;
@@ -22,6 +26,12 @@ public class ActionEmulationHelper {
 		double x = MouseInfo.getPointerInfo().getLocation().getX() + dx;
 		double y = MouseInfo.getPointerInfo().getLocation().getY() + dy;
 		robot.mouseMove((int)x, (int)y);
+	}
+	
+	public static void moveMouseInGui(int x, int y, int screenWidth, int screenHeight) {
+		int glX = x * Minecraft.getMinecraft().displayWidth / screenWidth;
+		int glY = (Minecraft.getMinecraft().displayHeight / screenHeight) * (1 + screenHeight - y);
+		Mouse.setCursorPosition(glX, glY);
 	}
 
 	public static void startLeftClick() {

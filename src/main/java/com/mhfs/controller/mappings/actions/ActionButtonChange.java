@@ -41,9 +41,7 @@ public class ActionButtonChange extends ActionToEvent<Pair<Float, Float>>{
 		int yOff = button.height / 2;
 		int x = button.x + xOff;
 		int y = button.y + yOff;
-		int glX = x * Minecraft.getMinecraft().displayWidth / screenWidth;
-		int glY = (Minecraft.getMinecraft().displayHeight / screenHeight) * (1 + screenHeight - y);
-		Mouse.setCursorPosition(glX, glY);
+		ActionEmulationHelper.moveMouseInGui(x, y, screenWidth, screenHeight);
 	}
 
 	private Wrapper findNextGuiElement(List<Wrapper> buttonList, Direction direction, int screenWidth, int screenHeight) {

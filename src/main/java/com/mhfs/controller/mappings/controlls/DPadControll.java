@@ -75,8 +75,8 @@ public class DPadControll implements IControll<Pair<Float, Float>> {
 	}
 
 	public enum Direction {
-		UP(0F, 0.5F, "DU"),
-		DOWN(0F, -0.5F, "DR"),
+		UP(0F, -0.5F, "DU"),
+		DOWN(0F, +0.5F, "DR"),
 		LEFT(-0.5F, 0F, "DL"),
 		RIGHT(0.5F, 0F, "DR");
 		
