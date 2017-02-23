@@ -76,8 +76,28 @@ public class InvocationManager {
 		}
 		for (int i = 0; i < validArgs.length; i++) {
 			if (!validArgs[i].isAssignableFrom(args[i].getClass())) {
+				if(checkPrimitive(validArgs[i], args[i])) {
+					continue;
+				}
 				throw new ClassCastException(String.format("Method '%s' expected '%s' as argument at index %d, but got '%s'!", method.getName(), validArgs[i].getCanonicalName(), i, args[i].getClass().getCanonicalName()));
 			}
 		}
+	}
+	
+	private boolean checkPrimitive(Class<?> validArg, Object arg) {
+		if(int.class.equals(validArg) && arg instanceof Integer) {
+			return true;
+		} else if(byte.class.equals(validArg) && (arg instanceof Byte)) {
+			return true;
+		} else if(long.class.equals(validArg) && (arg instanceof Long)) {
+			return true;
+		} else if(boolean.class.equals(validArg) && (arg instanceof Boolean)) {
+			return true;
+		} else if(double.class.equals(validArg) && (arg instanceof Double)) {
+			return true;
+		} else if(float.class.equals(validArg) && (arg instanceof Float)) {
+			return true;
+		}
+		return false;
 	}
 }
