@@ -33,7 +33,7 @@ public class DaemonManager {
 		builder.inheritIO();
 
 		process = builder.start();
-		Thread.sleep(1000);//Waiting for Daemon to start.
+		Thread.sleep(2000);//Waiting for Daemon to start.
 		
 		ClientNetworkHandler cnw = new ClientNetworkHandler();
 		InetSocketAddress adr = new InetSocketAddress("localhost", port);

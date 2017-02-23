@@ -42,13 +42,13 @@ public class ActionContainerSlotChange extends ActionToEvent<Pair<Float, Float>>
 		
 		Slot newSlot = null;
 		if(Direction.UP.isTriggered(x, y)) {
-			newSlot = search(gui, xStart + (SLOT_WIDTH / 2), yStart, 0, -SLOT_WIDTH);
+			newSlot = search(gui, xStart + (SLOT_WIDTH / 2), yStart, 0, -SLOT_WIDTH, SLOT_WIDTH/2, 0);
 		} else if(Direction.DOWN.isTriggered(x, y)) {
-			newSlot = search(gui, xStart + SLOT_WIDTH / 2, yStart + SLOT_WIDTH, 0, SLOT_WIDTH); 
+			newSlot = search(gui, xStart + SLOT_WIDTH / 2, yStart + SLOT_WIDTH, 0, SLOT_WIDTH, SLOT_WIDTH/2, 0); 
 		} else if(Direction.LEFT.isTriggered(x, y)) {
-			newSlot = search(gui, xStart, yStart + SLOT_WIDTH / 2, -SLOT_WIDTH, 0);
+			newSlot = search(gui, xStart, yStart + SLOT_WIDTH / 2, -SLOT_WIDTH, 0, 0, SLOT_WIDTH/2);
 		} else if(Direction.RIGHT.isTriggered(x, y)){
-			newSlot = search(gui, xStart + SLOT_WIDTH, yStart + SLOT_WIDTH / 2, SLOT_WIDTH, 0);
+			newSlot = search(gui, xStart + SLOT_WIDTH, yStart + SLOT_WIDTH / 2, SLOT_WIDTH, 0, 0, SLOT_WIDTH/2);
 		}
 		if(newSlot != null) {
 			ActionEmulationHelper.moveMouseInGui(newSlot.xPos + SLOT_WIDTH / 2 + gui.getGuiLeft(), newSlot.yPos + SLOT_WIDTH / 2 + gui.getGuiTop(), gui.width, gui.height);
@@ -56,15 +56,20 @@ public class ActionContainerSlotChange extends ActionToEvent<Pair<Float, Float>>
 		return true;
 	}
 	
-	private Slot search(GuiContainer gui, int startX, int startY, int stepX, int stepY) {
+	private Slot search(GuiContainer gui, int startX, int startY, int stepX, int stepY, int altPathX, int altPathY) {
 		int currentX = startX;
 		int currentY = startY;
 		while(0 <= currentX && currentX <= gui.width && 0 <= currentY && currentY <= gui.height) {
 			currentX += stepX;//do step
 			currentY += stepY;
 			
-			Slot temp = getSlotAt(gui, currentX, currentY);
-			
+			Slot temp = getSlotAt(gui, currentX - altPathX, currentY - altPathY);
+			if(temp == null) {
+				temp = getSlotAt(gui, currentX, currentY);
+				if(temp == null) {
+					temp = getSlotAt(gui, currentX + altPathX, currentY + altPathY);
+				}
+			}
 			if(temp != null) {
 				return temp;
 			}
