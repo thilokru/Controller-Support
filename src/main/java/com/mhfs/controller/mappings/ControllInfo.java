@@ -85,6 +85,9 @@ public class ControllInfo {
 		String name = controller.getName();
 		Config.INSTANCE.setControllerConfig(IndexData.get().controller(name));
 		ControllInfo.load(Config.INSTANCE.getControllerConfig().getButtonIDMapping(), manager);
+		for(StickConfig config : INSTANCE.sticksCompiled.values()) {
+			config.applyDeadZone(controller);
+		}
 	}
 	
 	public TextureHelper getTextureHelper() {
