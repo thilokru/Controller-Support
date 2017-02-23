@@ -28,13 +28,17 @@
 			xName: "LX",
 			yName: "LY",
 			xInverted: true,
-			yInverted: true		
+			yInverted: true,
+			xDeadZone: 0.1,
+			yDeadZone: 0.1
 		},
 		"R": {
 			xName: "RX",
 			yName: "RY",
 			xInverted: false,
-			yInverted: true
+			yInverted: true,
+			xDeadZone: 0.1,
+			yDeadZone: 0.1
 		}
 	},
 	texture: "controller_support:textures/ps4-buttons.cfg"
