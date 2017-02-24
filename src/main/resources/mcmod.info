@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "controller_support",
+  "name": "Controller Support",
+  "description": "This mod provides controller support to the player.\nCurrently the XBox360-Controller and the PS4-Controller are supported.\nBut with the config files found in the mods resources, new controllers can be added easily.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["sinus aka Javaschreiber"],
+  "credits": "See the authors list.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
