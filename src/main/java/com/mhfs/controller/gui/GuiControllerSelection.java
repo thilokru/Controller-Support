@@ -39,7 +39,7 @@ public class GuiControllerSelection extends GuiScreen {
 	public void initGui() {
 		this.labelList.clear();
 		super.initGui();
-		GuiLabel label = new GuiLabel(this.fontRenderer, 0, 0, this.height / 2, this.width, this.fontRenderer.FONT_HEIGHT, Color.WHITE.getRGB());
+		GuiLabel label = new GuiLabel(this.fontRendererObj, 0, 0, this.height / 2, this.width, this.fontRendererObj.FONT_HEIGHT, Color.WHITE.getRGB());
 		label.setCentered();
 		label.addLine(I18n.format("gui.controller.pressAnyKey"));
 		this.labelList.add(label);
