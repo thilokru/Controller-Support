@@ -17,3 +17,4 @@ gui.input.special=Special Characters
 gui.input.select=Select
 gui.controller.pressAnyKey=Press any key on the controller you want to use...
 gui.controller.useMouse=Mouse and Keyboard
+gui.controller.slotChange=Change Slot
