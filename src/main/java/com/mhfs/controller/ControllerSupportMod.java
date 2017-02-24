@@ -12,15 +12,14 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = ControllerSupportMod.MODID, name = ControllerSupportMod.NAME, version = "1.0Alpha", clientSideOnly = true, canBeDeactivated = true)
+@Mod(modid = ControllerSupportMod.MODID, clientSideOnly = true, canBeDeactivated = true)
 public class ControllerSupportMod {
 	
 	public final static String MODID = "controller_support";
-	public final static String NAME = "Controller Support";
 	
 	@Instance("controller_support")
 	public static ControllerSupportMod INSTANCE;
-	public static Logger LOG = LogManager.getLogger("Controller Support");
+	public static Logger LOG = LogManager.getLogger(MODID);
 	
 	public ModEventHandler handler;
 	

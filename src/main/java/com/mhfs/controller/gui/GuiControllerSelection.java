@@ -15,7 +15,6 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiControllerSelection extends GuiScreen {
 
-
 	public static void requestController() {
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiControllerSelection)return;
 		if(!HotplugHandler.getIPCHandler().hasControllers()) {

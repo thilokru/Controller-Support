@@ -16,8 +16,6 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiTextInput extends GuiScreen{
 	
-	
-	
 	private GuiScreen previous;
 	private GuiTextField inputTarget;
 	private GuiTextField textDisplay;
