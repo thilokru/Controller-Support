@@ -28,10 +28,11 @@ public class InvocationManager {
 		}
 	}
 
-	public CallFuture<?> invoke(String name, Object... args) {
+	@SuppressWarnings("unchecked")
+	public <T> CallFuture<T> invoke(String name, Object... args) {
 		for (Method<?> method : methods) {
 			if (method.getName().equals(name)) {
-				return invoke(method, args);
+				return (CallFuture<T>) invoke(method, args);
 			}
 		}
 		return null;

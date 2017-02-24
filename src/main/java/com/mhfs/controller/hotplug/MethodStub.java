@@ -15,43 +15,42 @@ public class MethodStub implements ExtendedMethods{
 
 	@Override
 	public ByteBuf getControllerData() {
-		return (ByteBuf) manager.invoke("getControllerData").syncUninteruptable().getResult();
+		return manager.<ByteBuf>invoke("getControllerData").syncUninteruptable().getResult();
 	}
 
 	@Override
 	public boolean hasControllers() {
-		return (boolean) manager.invoke("hasControllers").syncUninteruptable().getResult();
+		return manager.<Boolean>invoke("hasControllers").syncUninteruptable().getResult();
 	}
 
 	@Override
 	public boolean restartRequired() {
-		return (boolean) manager.invoke("restartRequired").syncUninteruptable().getResult();
+		return manager.<Boolean>invoke("restartRequired").syncUninteruptable().getResult();
 	}
 
 	@Override
 	public boolean awaitControllerSelection() {
-		return (boolean) manager.invoke("awaitControllerSelection").syncUninteruptable().getResult();
+		return manager.<Boolean>invoke("awaitControllerSelection").syncUninteruptable().getResult();
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public CallFuture<Boolean> startControllerSelection() {
-		return (CallFuture<Boolean>) manager.invoke("awaitControllerSelection");
+		return manager.<Boolean>invoke("awaitControllerSelection");
 	}
 
 	@Override
 	public void stopControllerSelection() {
-		manager.invoke("stopControllerSelection").syncUninteruptable();
+		manager.<Void>invoke("stopControllerSelection").syncUninteruptable();
 	}
 
 	@Override
 	public void setDeadZone(int index, float zone) {
-		manager.invoke("setDeadZone", index, zone).syncUninteruptable();
+		manager.<Void>invoke("setDeadZone", index, zone).syncUninteruptable();
 	}
 
 	@Override
 	public void setRumblerStrength(int index, float strength) {
-		manager.invoke("setRumblerStrength", index, strength).syncUninteruptable();
+		manager.<Void>invoke("setRumblerStrength", index, strength).syncUninteruptable();
 	}
 
 }
