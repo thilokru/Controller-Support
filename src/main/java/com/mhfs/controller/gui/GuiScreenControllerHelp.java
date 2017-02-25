@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.State;
 import com.mhfs.controller.mappings.ControllerMapping;
 
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,7 @@ public class GuiScreenControllerHelp extends GuiScreen {
 		this.startX = 0;
 		this.lineWidth = 0;
 		this.columns = 1;
-		ControllerMapping mapping = Config.INSTANCE.getMapping();
+		ControllerMapping mapping = State.mapping;
 		functions = mapping.getIngameButtonFunctions();
 		this.buttonList.add(new GuiButton(0, (this.width / 2) - 100, this.height - 20, I18n.format("gui.back")));
 		int currentY = 50;

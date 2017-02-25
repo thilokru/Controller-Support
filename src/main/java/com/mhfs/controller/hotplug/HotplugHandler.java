@@ -4,7 +4,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Controller;
 
 import com.mhfs.controller.ControllerSupportMod;
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.State;
 import com.mhfs.controller.gui.GuiControllerSelection;
 import com.mhfs.controller.mappings.ControllerMapping;
 import com.mhfs.ipc.InvocationManager;
@@ -52,12 +52,11 @@ public class HotplugHandler {
 			controller.poll();
 			LOG.info(String.format("The user chose to use the following controller: '%s'", controller.getName()));
 		}
-		Config.INSTANCE.setController(controller);
-		if(Config.INSTANCE.hasController()) {
+		State.controller = controller;
+		if(State.controller != null) {
 			ControllerSupportMod.INSTANCE.handler.activate();
 			ControllerMapping mapping = ControllerMapping.loadFromConfig();
-			Config.INSTANCE.setMapping(mapping);	
-			Config.INSTANCE.save();
+			State.mapping = mapping;
 		} else {
 			ControllerSupportMod.INSTANCE.handler.deactivate();
 		}

@@ -14,7 +14,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.State;
 import com.mhfs.controller.config.IndexData;
 import com.mhfs.controller.textures.TextureHelper;
 
@@ -83,8 +83,8 @@ public class ControllInfo {
 	
 	public static void updateButtonMap(Controller controller, IResourceManager manager) {
 		String name = controller.getName();
-		Config.INSTANCE.setControllerConfig(IndexData.get().controller(name));
-		ControllInfo.load(Config.INSTANCE.getControllerConfig().getButtonIDMapping(), manager);
+		State.controllerConfig = IndexData.get().controller(name);
+		ControllInfo.load(State.controllerConfig.getButtonIDMapping(), manager);
 		for(StickConfig config : INSTANCE.sticksCompiled.values()) {
 			config.applyDeadZone(controller);
 		}

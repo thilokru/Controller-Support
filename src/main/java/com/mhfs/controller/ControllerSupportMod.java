@@ -3,9 +3,10 @@ package com.mhfs.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mhfs.controller.config.Config;
 import com.mhfs.controller.mappings.actions.ActionRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -30,7 +31,7 @@ public class ControllerSupportMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Config.INSTANCE = new Config(event);
+		ConfigManager.load(MODID, Config.Type.INSTANCE);
 	}
 	
 	@EventHandler

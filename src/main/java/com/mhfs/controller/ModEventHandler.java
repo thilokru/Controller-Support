@@ -3,7 +3,7 @@ package com.mhfs.controller;
 import java.util.List;
 import org.lwjgl.input.Controller;
 
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.State;
 import com.mhfs.controller.gui.GuiButtonSelector;
 import com.mhfs.controller.gui.GuiScreenControllerHelp;
 import com.mhfs.controller.gui.GuiTextInput;
@@ -27,7 +27,6 @@ import net.minecraft.util.MovementInputFromOptions;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -122,10 +121,9 @@ public class ModEventHandler {
 
 	public void handleTick() {
 		if (active) {
-			Config cfg = Config.INSTANCE;
-			Controller controller = cfg.getController();
+			Controller controller = State.controller;
 			controller.poll();
-			cfg.getMapping().apply();
+			State.mapping.apply();
 		}
 		HotplugHandler.checkControllerManagerRestart();
 	}
@@ -155,10 +153,5 @@ public class ModEventHandler {
 				}
 			}
 		}
-	}
-
-	@SubscribeEvent
-	public void handleConfigChange(ConfigChangedEvent event) {
-		Config.INSTANCE.save();
 	}
 }

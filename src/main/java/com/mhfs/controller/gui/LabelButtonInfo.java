@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Throwables;
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.State;
 import com.mhfs.controller.mappings.ControllInfo;
 import com.mhfs.controller.textures.TextureHelper;
 import com.mhfs.controller.textures.TextureHelper.SubTexture;
@@ -32,7 +32,7 @@ public class LabelButtonInfo extends GuiLabel {
 	
 	@Override
 	public void drawLabel(Minecraft mc, int mouseX, int mouseY) {
-		List<Pair<String, String>> buttonFunctions = Config.INSTANCE.getMapping().getButtonFunctions();
+		List<Pair<String, String>> buttonFunctions = State.mapping.getButtonFunctions();
 		
 		int width = 0;
 		for(Pair<String, String> entry : buttonFunctions) {

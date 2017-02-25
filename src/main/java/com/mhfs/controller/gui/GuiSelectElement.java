@@ -4,7 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Controller;
 import org.lwjgl.opengl.GL11;
 
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.State;
 import com.mhfs.controller.mappings.ControllerMapping;
 import com.mhfs.controller.mappings.StickConfig;
 import com.mhfs.controller.mappings.Usage;
@@ -47,8 +47,8 @@ public abstract class GuiSelectElement<T> extends Gui {
 	}
 	
 	public void handleInput() {
-		Controller controller = Config.INSTANCE.getController();
-		ControllerMapping mapping = Config.INSTANCE.getMapping();
+		Controller controller = State.controller;
+		ControllerMapping mapping = State.mapping;
 		StickConfig input = mapping.getStick(Usage.WHEEL);
 		if(input != null) {
 			this.selectionInput = input.getData(controller);

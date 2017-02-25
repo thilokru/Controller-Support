@@ -2,7 +2,7 @@ package com.mhfs.controller.mappings.conditions;
 
 import org.lwjgl.input.Controller;
 
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.State;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -37,7 +37,7 @@ public class GameContext {
 	}
 	
 	public Controller getController() {
-		return Config.INSTANCE.getController();
+		return State.controller;
 	}
 	
 	public static GameContext getIngameContext() {

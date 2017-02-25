@@ -16,7 +16,8 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.mhfs.controller.ControllerSupportMod;
-import com.mhfs.controller.config.Config;
+import com.mhfs.controller.config.Configuration;
+import com.mhfs.controller.config.State;
 import com.mhfs.controller.mappings.actions.ActionEmulationHelper;
 import com.mhfs.controller.mappings.actions.IAction;
 import com.mhfs.controller.mappings.actions.IParametrizedAction;
@@ -104,7 +105,7 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 	private boolean isOptionScreen() {
 		if(context.getCurrentScreen() == null)return false;
 		String checkName = context.getCurrentScreen().getClass().getCanonicalName();
-		for(String clazzName : Config.INSTANCE.getOptionsClasses()) {
+		for(String clazzName : Configuration.optionClasses) {
 			if(checkName.matches(clazzName))
 				return true;
 		}
@@ -165,7 +166,7 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
-		ControllInfo.updateButtonMap(Config.INSTANCE.getController(), resourceManager);
+		ControllInfo.updateButtonMap(State.controller, resourceManager);
 		ControllerMapping newMapping = loadFromFile(location, resourceManager);
 		this.buttonMap = newMapping.buttonMap;
 		this.stickMap = newMapping.stickMap;
@@ -185,8 +186,8 @@ public class ControllerMapping implements IResourceManagerReloadListener {
 
 	public static ControllerMapping loadFromConfig() {
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
-		ControllInfo.updateButtonMap(Config.INSTANCE.getController(), manager);
-		ResourceLocation loc = Config.INSTANCE.getControllerConfig().getActionMapping();
+		ControllInfo.updateButtonMap(State.controller, manager);
+		ResourceLocation loc = State.controllerConfig.getActionMapping();
 		return loadFromFile(loc, manager);
 	}
 
