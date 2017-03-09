@@ -26,7 +26,10 @@ import net.minecraft.util.MouseHelper;
 import net.minecraft.util.MovementInputFromOptions;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -152,6 +155,13 @@ public class ModEventHandler {
 					Minecraft.getMinecraft().displayGuiScreen(new GuiScreenControllerHelp(event.getGui()));
 				}
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onConfigChange(ConfigChangedEvent event) {
+		if(event.getModID().equals(ControllerSupportMod.MODID)) {
+			ConfigManager.load(ControllerSupportMod.MODID, Config.Type.INSTANCE);
 		}
 	}
 }
